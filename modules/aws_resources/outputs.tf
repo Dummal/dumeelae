@@ -1,3 +1,4 @@
+
 output "aft_logs_bucket_id" {
   description = "ID of the AFT logs S3 bucket"
   value       = aws_s3_bucket.aft_logs.id

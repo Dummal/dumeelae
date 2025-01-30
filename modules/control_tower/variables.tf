@@ -1,3 +1,4 @@
+
 variable "enable_control_tower" {
   description = "Flag to enable AWS Control Tower if not already enabled"
   type        = bool

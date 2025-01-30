@@ -1,3 +1,4 @@
+
 output "aft_execution_role_arn" {
   description = "ARN of the AFT execution role"
   value       = aws_iam_role.aft_execution_role.arn

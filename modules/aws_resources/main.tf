@@ -1,3 +1,4 @@
+
 # Create AWS resources for Control Tower and AFT
 
 resource "aws_s3_bucket" "aft_logs" {
