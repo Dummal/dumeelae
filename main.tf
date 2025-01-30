@@ -1,115 +1,46 @@
-resource "aws_s3_bucket" "aft_logs_bucket" {
-  bucket = "aft-logs-bucket-863518414447"
+# AWS Control Tower Landing Zone Setup with AFT
 
-  versioning {
-    enabled = true
-  }
+module "control_tower" {
+  source = "./modules/control_tower"
 
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm   = "aws:kms"
-        kms_master_key_id = aws_kms_key.aft_kms_key.arn
-      }
-    }
-  }
-
-  block_public_access {
-    block_public_acls       = true
-    block_public_policy     = true
-    ignore_public_acls      = true
-    restrict_public_buckets = true
-  }
-
-  tags = {
-    Environment = "Production"
-    ManagedBy   = "Terraform"
-  }
+  enable_control_tower  = var.enable_control_tower
+  master_account_email  = var.master_account_email
+  organizational_units  = var.organizational_units
+  aws_region            = var.aws_region
 }
 
-resource "aws_kms_key" "aft_kms_key" {
-  description             = "KMS key for AFT resources"
-  enable_key_rotation     = true
-  deletion_window_in_days = 30
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Id      = "key-default-1"
-    Statement = [
-      {
-        Sid       = "Enable IAM User Permissions"
-        Effect    = "Allow"
-        Principal = {
-          AWS = "arn:aws:iam::863518414447:root"
-        }
-        Action    = "kms:*"
-        Resource  = "*"
-      },
-      {
-        Sid       = "Allow CloudWatch Logs"
-        Effect    = "Allow"
-        Principal = {
-          Service = "logs.us-west-2.amazonaws.com"
-        }
-        Action    = [
-          "kms:Encrypt",
-          "kms:Decrypt",
-          "kms:ReEncrypt*",
-          "kms:GenerateDataKey*",
-          "kms:DescribeKey"
-        ]
-        Resource = "*"
-      }
-    ]
-  })
-
-  tags = {
-    Environment = "Production"
-    ManagedBy   = "Terraform"
-  }
+module "iam" {
+  source = "./modules/iam"
+  master_account_id = var.master_account_id
 }
 
-resource "aws_sns_topic" "aft_notifications" {
-  name              = "aft-notifications"
-  kms_master_key_id = aws_kms_key.aft_kms_key.arn
+module "aws_resources" {
+  source = "./modules/aws_resources"
 
-  tags = {
-    Environment = "Production"
-    ManagedBy   = "Terraform"
-  }
+  aft_logs_bucket_name = var.aft_logs_bucket_name
+  aws_region           = var.aws_region
+  master_account_id    = var.master_account_id
 }
 
-resource "aws_dynamodb_table" "aft_requests" {
-  name           = "aft-requests"
-  billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = "id"
-  point_in_time_recovery {
-    enabled = true
-  }
-
-  attribute {
-    name = "id"
-    type = "S"
-  }
-
-  server_side_encryption {
-    enabled     = true
-    kms_key_arn = aws_kms_key.aft_kms_key.arn
-  }
-
-  tags = {
-    Environment = "Production"
-    ManagedBy   = "Terraform"
-  }
+# Create Dev Account
+resource "aws_organizations_account" "dev" {
+  name      = "Dev Account"
+  email     = var.dev_account_email
+  parent_id = module.control_tower.security_ou_id
 }
 
-resource "aws_cloudwatch_log_group" "aft_logs" {
-  name              = "/aws/aft/logs"
-  retention_in_days = 90
-  kms_key_id        = aws_kms_key.aft_kms_key.arn
-
-  tags = {
-    Environment = "Production"
-    ManagedBy   = "Terraform"
-  }
+# Create Prod Account
+resource "aws_organizations_account" "prod" {
+  name      = "Prod Account"
+  email     = var.prod_account_email
+  parent_id = module.control_tower.security_ou_id
 }
+
+# Create Shared Account
+resource "aws_organizations_account" "shared" {
+  name      = "Shared Account"
+  email     = var.shared_account_email
+  parent_id = module.control_tower.security_ou_id
+}
+
+# Outputs are defined in outputs.tf

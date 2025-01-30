@@ -1,110 +1,21 @@
-variable "enable_aws_organizations" {
-  type    = bool
-  default = true
-}
-
-variable "aws_services_to_integrate" {
-  type    = list(string)
-  default = [
-    "cloudtrail.amazonaws.com",
-    "config.amazonaws.com",
-    "sso.amazonaws.com",
-    "controltower.amazonaws.com"
-  ]
-}
-
-variable "aws_organizations_feature_set" {
-  type    = string
-  default = "ALL"
-}
-
-variable "enabled_policy_types" {
-  type    = list(string)
-  default = [
-    "SERVICE_CONTROL_POLICY",
-    "TAG_POLICY"
-  ]
-}
-
-variable "organizational_units" {
-  type = list(object({
-    name = string
-    tags = map(string)
-  }))
-  default = [
-    {
-      name = "Security"
-      tags = {
-        Environment = "Production"
-        Purpose     = "Security"
-      }
-    },
-    {
-      name = "Audit Log"
-      tags = {
-        Environment = "Production"
-        Purpose     = "Audit"
-      }
-    }
-  ]
-}
-
-variable "create_service_control_policy" {
-  type    = bool
-  default = true
-}
-
-variable "scp_name" {
-  type    = string
-  default = "DenyRootUser"
-}
-
-variable "scp_policy_document" {
-  type = object({
-    Version   = string
-    Statement = list(object({
-      Effect    = string
-      Action    = list(string)
-      Resource  = list(string)
-      Principal = map(string)
-      Condition = map(any)
-    }))
-  })
-  default = {
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect    = "Deny"
-        Action    = ["*"]
-        Resource  = ["*"]
-        Principal = {
-          AWS = "arn:aws:iam::*:root"
-        }
-        Condition = {}
-      }
-    ]
-  }
-}
-
-variable "scp_attachment_target" {
-  type    = string
-  default = "root"
-}
-
 variable "enable_control_tower" {
-  type    = bool
-  default = true
+  description = "Flag to enable AWS Control Tower if not already enabled"
+  type        = bool
+  default     = true
 }
 
 variable "master_account_email" {
-  type = string
+  description = "Email address for the master account"
+  type        = string
 }
 
-variable "control_tower_region" {
-  type = string
+variable "organizational_units" {
+  description = "List of organizational units to create"
+  type        = list(string)
+  default     = ["Security", "Audit Log"]
 }
 
-variable "output_organization_ids" {
-  type    = bool
-  default = true
+variable "aws_region" {
+  description = "The AWS region to deploy the Control Tower landing zone"
+  type        = string
 }
