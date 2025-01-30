@@ -62,3 +62,5 @@ output "shared_account_id" {
   description = "The ID of the Shared account"
   value       = aws_organizations_account.shared.id
 }
+
+    

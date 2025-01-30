@@ -44,3 +44,4 @@ resource "aws_organizations_account" "shared" {
 }
 
 # Outputs are defined in outputs.tf
+    
