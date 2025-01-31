@@ -1,1 +1,0 @@
-The Terraform script provided by the TerraformGenerator tool includes configurations for AWS Organizations (organizational units and accounts) and an S3 bucket for AFT logs. AWS Control Tower must be enabled manually via the AWS Management Console or AWS CLI, as it is not directly supported by Terraform. Let me know if you need further assistance or modifications to the script!
