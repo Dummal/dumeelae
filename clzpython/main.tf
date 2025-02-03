@@ -1,46 +1,54 @@
-# AWS Control Tower Landing Zone Setup with AFT
-
-module "control_tower" {
-  source = "./modules/control_tower"
-
-  enable_control_tower  = var.enable_control_tower
-  master_account_email  = var.master_account_email
-  organizational_units  = var.organizational_units
-  aws_region            = var.aws_region
+### **`main.tf`**
+```hcl
+provider "aws" {
+  region = var.aws_region
 }
 
-module "iam" {
-  source = "./modules/iam"
-  master_account_id = var.master_account_id
+resource "aws_vpc" "main" {
+  cidr_block           = var.vpc_cidr
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+  tags = {
+    Name = "main-vpc"
+  }
 }
 
-module "aws_resources" {
-  source = "./modules/aws_resources"
-
-  aft_logs_bucket_name = var.aft_logs_bucket_name
-  aws_region           = var.aws_region
-  master_account_id    = var.master_account_id
+resource "aws_subnet" "public" {
+  count                   = length(var.availability_zones)
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = element(var.public_subnet_cidrs, count.index)
+  availability_zone       = element(var.availability_zones, count.index)
+  map_public_ip_on_launch = true
+  tags = {
+    Name = "public-subnet-${element(var.availability_zones, count.index)}"
+  }
 }
 
-# Create Dev Account
-resource "aws_organizations_account" "dev" {
-  name      = "Dev Account"
-  email     = var.dev_account_email
-  parent_id = module.control_tower.security_ou_id
+resource "aws_internet_gateway" "main" {
+  vpc_id = aws_vpc.main.id
+  tags = {
+    Name = "main-internet-gateway"
+  }
 }
 
-# Create Prod Account
-resource "aws_organizations_account" "prod" {
-  name      = "Prod Account"
-  email     = var.prod_account_email
-  parent_id = module.control_tower.security_ou_id
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.main.id
+  tags = {
+    Name = "public-route-table"
+  }
 }
 
-# Create Shared Account
-resource "aws_organizations_account" "shared" {
-  name      = "Shared Account"
-  email     = var.shared_account_email
-  parent_id = module.control_tower.security_ou_id
+resource "aws_route" "public_internet_access" {
+  route_table_id         = aws_route_table.public.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.main.id
 }
 
-# Outputs are defined in outputs.tf
+resource "aws_route_table_association" "public" {
+  count          = length(var.availability_zones)
+  subnet_id      = element(aws_subnet.public.*.id, count.index)
+  route_table_id = aws_route_table.public.id
+}
+```
+
+---
