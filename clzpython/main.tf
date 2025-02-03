@@ -1,4 +1,4 @@
-### **`main.tf`**
+### **main.tf**
 ```hcl
 provider "aws" {
   region = var.aws_region

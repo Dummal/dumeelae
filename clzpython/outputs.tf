@@ -1,4 +1,4 @@
-### **`outputs.tf`**
+### **outputs.tf**
 ```hcl
 output "vpc_id" {
   description = "The ID of the VPC"

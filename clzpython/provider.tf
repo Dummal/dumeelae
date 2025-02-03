@@ -1,4 +1,4 @@
-### **`provider.tf`**
+### **provider.tf**
 ```hcl
 terraform {
   required_providers {
