@@ -1,4 +1,4 @@
-### **variables.tf**
+### **`variables.tf`**
 ```hcl
 variable "aws_region" {
   description = "The AWS region to deploy resources in"
@@ -22,3 +22,6 @@ variable "public_subnet_cidrs" {
 ```
 
 ---
+
+2. **`variables.tf`**:
+   - Defines input variables for the AWS region, VPC CIDR block, availability zones, and public subnet CIDRs.

@@ -1,4 +1,4 @@
-### **main.tf**
+### **`main.tf`**
 ```hcl
 provider "aws" {
   region = var.aws_region
@@ -52,3 +52,9 @@ resource "aws_route_table_association" "public" {
 ```
 
 ---
+
+1. **`main.tf`**:
+   - Creates a VPC with DNS support enabled.
+   - Creates public subnets in multiple availability zones.
+   - Sets up an internet gateway and associates it with the VPC.
+   - Configures a route table for public internet access and associates it with the public subnets.

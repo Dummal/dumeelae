@@ -1,4 +1,4 @@
-### **provider.tf**
+### **`provider.tf`**
 ```hcl
 terraform {
   required_providers {
@@ -13,3 +13,6 @@ terraform {
 ```
 
 ---
+
+4. **`provider.tf`**:
+   - Specifies the AWS provider and required Terraform version.

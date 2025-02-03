@@ -1,4 +1,4 @@
-### **outputs.tf**
+### **`outputs.tf`**
 ```hcl
 output "vpc_id" {
   description = "The ID of the VPC"
@@ -17,3 +17,6 @@ output "internet_gateway_id" {
 ```
 
 ---
+
+3. **`outputs.tf`**:
+   - Outputs the VPC ID, public subnet IDs, and internet gateway ID for reference.
