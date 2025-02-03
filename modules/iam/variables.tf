@@ -3,14 +3,14 @@ variable "aft_lambda_execution_role_name" {
   type        = string
 }
 
-variable "aft_lambda_execution_role_policy_arn" {
-  description = "ARN of the AWS-managed policy to attach to the AFT Lambda execution role."
+variable "aft_lambda_execution_policy_arn" {
+  description = "ARN of the AWS-managed policy for AFT Lambda execution role."
   type        = string
   default     = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
 variable "aft_account_provisioning_role_name" {
-  description = "Name of the IAM role for AFT account provisioning operations in AWS Organizations."
+  description = "Name of the IAM role for AFT account provisioning operations."
   type        = string
 }
 
@@ -25,16 +25,10 @@ variable "aft_admin_role_name" {
   type        = string
 }
 
-variable "aft_admin_role_policy_arn" {
-  description = "ARN of the AWS-managed policy to attach to the AFT admin role."
+variable "aft_admin_policy_arn" {
+  description = "ARN of the AWS-managed AdministratorAccess policy for the AFT admin role."
   type        = string
   default     = "arn:aws:iam::aws:policy/AdministratorAccess"
-}
-
-variable "aft_admin_role_mfa_required" {
-  description = "Indicates whether MFA is required for the AFT admin role."
-  type        = bool
-  default     = true
 }
 
 variable "master_account_id" {
@@ -46,7 +40,7 @@ variable "iam_resource_tags" {
   description = "Tags to attach to all IAM resources for identification."
   type        = map(string)
   default     = {
-    Purpose   = "AFT"
-    ManagedBy = "Terraform"
+    Purpose    = "AFT"
+    ManagedBy  = "Terraform"
   }
 }

@@ -3,14 +3,27 @@ variable "enable_aws_organizations" {
   default = true
 }
 
-variable "aws_organization_features" {
+variable "aws_services_to_integrate" {
+  type    = list(string)
+  default = [
+    "cloudtrail.amazonaws.com",
+    "config.amazonaws.com",
+    "sso.amazonaws.com",
+    "controltower.amazonaws.com"
+  ]
+}
+
+variable "aws_organizations_feature_set" {
   type    = string
   default = "ALL"
 }
 
 variable "enabled_policy_types" {
   type    = list(string)
-  default = ["SERVICE_CONTROL_POLICY", "TAG_POLICY"]
+  default = [
+    "SERVICE_CONTROL_POLICY",
+    "TAG_POLICY"
+  ]
 }
 
 variable "organizational_units" {
@@ -36,29 +49,46 @@ variable "organizational_units" {
   ]
 }
 
-variable "service_control_policies" {
-  type = list(object({
-    name       = string
-    statement  = object({
-      effect    = string
-      actions   = list(string)
-      principal = string
-    })
-    conditions = map(string)
-    attach_to  = string
-  }))
-  default = [
-    {
-      name = "DenyRootUser"
-      statement = {
-        effect    = "Deny"
-        actions   = ["*"]
-        principal = "arn:aws:iam::*:root"
+variable "create_service_control_policy" {
+  type    = bool
+  default = true
+}
+
+variable "scp_name" {
+  type    = string
+  default = "DenyRootUser"
+}
+
+variable "scp_policy_document" {
+  type = object({
+    Version   = string
+    Statement = list(object({
+      Effect    = string
+      Action    = list(string)
+      Resource  = list(string)
+      Principal = object({
+        AWS = string
+      })
+    }))
+  })
+  default = {
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Deny"
+        Action    = ["*"]
+        Resource  = ["*"]
+        Principal = {
+          AWS = "arn:aws:iam::*:root"
+        }
       }
-      conditions = {}
-      attach_to  = "root"
-    }
-  ]
+    ]
+  }
+}
+
+variable "scp_attachment_target" {
+  type    = string
+  default = "root"
 }
 
 variable "enable_control_tower" {
@@ -67,16 +97,19 @@ variable "enable_control_tower" {
 }
 
 variable "master_account_email" {
-  type    = string
-  default = ""
+  type = string
 }
 
 variable "control_tower_region" {
-  type    = string
-  default = ""
+  type = string
 }
 
 variable "output_organization_ids" {
+  type    = bool
+  default = true
+}
+
+variable "manual_control_tower_setup" {
   type    = bool
   default = true
 }

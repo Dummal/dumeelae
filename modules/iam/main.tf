@@ -55,8 +55,8 @@ resource "aws_iam_policy" "aft_account_provisioning_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        Effect   = "Allow"
-        Action   = [
+        Effect = "Allow"
+        Action = [
           "organizations:CreateAccount",
           "organizations:ListAccounts",
           "organizations:MoveAccount",
