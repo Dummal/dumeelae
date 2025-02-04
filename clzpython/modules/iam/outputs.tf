@@ -1,11 +1,12 @@
 output "role_arn" {
-  value = aws_iam_role.multi_account_role.arn
+  description = "IAM Role ARN"
+  value       = aws_iam_role.example.arn
 }
 ```
 
 ---
 
-### AWS Resources Module
+### AWS Resources Module Files
 
 #### `# FILE: modules/aws_resources/main.tf`
 ```hcl

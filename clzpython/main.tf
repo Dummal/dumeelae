@@ -11,8 +11,19 @@ terraform {
     key            = var.backend_key
     region         = var.backend_region
     dynamodb_table = var.backend_dynamodb_table
-    encrypt        = true
   }
+}
+
+provider "aws" {
+  alias  = "management"
+  region = var.management_account_region
+  profile = var.management_account_profile
+}
+
+provider "aws" {
+  alias  = "member"
+  region = var.member_account_region
+  profile = var.member_account_profile
 }
 
 module "iam" {
