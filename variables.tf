@@ -5,22 +5,22 @@ variable "aws_region" {
 }
 
 variable "enable_control_tower" {
-  description = "Flag to enable or disable AWS Control Tower."
+  description = "Flag to enable or disable AWS Control Tower setup."
   type        = bool
 }
 
 variable "master_account_email" {
-  description = "Email address for the master account."
+  description = "Email address for the AWS Control Tower master account."
   type        = string
 }
 
 variable "master_account_id" {
-  description = "AWS account ID for the master account."
+  description = "Account ID for the AWS Control Tower master account."
   type        = string
 }
 
 variable "organizational_units" {
-  description = "List of organizational units to be created in AWS Control Tower."
+  description = "List of Organizational Units (OUs) to be created in AWS Control Tower."
   type        = list(string)
 }
 
@@ -60,11 +60,11 @@ variable "organization_name" {
 }
 
 variable "parent_id" {
-  description = "Parent ID for the organizational units."
+  description = "Parent ID for the root Organizational Unit (OU)."
   type        = string
 }
 
 variable "users_email" {
-  description = "List of email addresses for users in the organization."
+  description = "List of email addresses for users to be added to the organization."
   type        = list(string)
 }
