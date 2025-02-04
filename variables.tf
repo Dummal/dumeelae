@@ -20,7 +20,7 @@ variable "master_account_id" {
 }
 
 variable "organizational_units" {
-  description = "List of organizational units to be created."
+  description = "List of organizational units to be created in AWS Control Tower."
   type        = list(string)
 }
 
@@ -50,7 +50,7 @@ variable "audit_account_email" {
 }
 
 variable "aft_logs_bucket_name" {
-  description = "Name of the S3 bucket for AFT logs."
+  description = "Name of the S3 bucket for storing AFT logs."
   type        = string
 }
 

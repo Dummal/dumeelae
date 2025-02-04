@@ -8,9 +8,9 @@ module "control_tower" {
   master_account_email  = var.master_account_email
   master_account_id     = var.master_account_id
   organizational_units  = {
-    Security  = "Security"
-    AuditLog  = "AuditLog"
-    Sandbox   = "Sandbox"
+    Security   = "Security",
+    AuditLog   = "Audit Log",
+    Sandbox    = "Sandbox"
   }
   security_account_email = var.security_account_email
   audit_account_email    = var.audit_account_email
@@ -23,17 +23,14 @@ module "iam" {
     aft_execution_role = {
       name        = "AFTExecutionRole"
       description = "Role for AFT Lambda execution"
-      policies    = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
     }
     aft_account_provisioning_role = {
       name        = "AFTAccountProvisioningRole"
       description = "Role for AFT account provisioning"
-      policies    = ["arn:aws:iam::aws:policy/AWSOrganizationsFullAccess"]
     }
     aft_admin_role = {
       name        = "AFTAdminRole"
-      description = "Admin role for AFT management"
-      policies    = ["arn:aws:iam::aws:policy/AdministratorAccess"]
+      description = "Role for AFT administration"
     }
   }
 }
@@ -45,8 +42,7 @@ module "aws_resources" {
     name          = "aft-logs-bucket-863518414447"
     versioning    = true
     encryption    = {
-      enabled = true
-      kms_key = aws_kms_key.aft_key.arn
+      kms_key_id = aws_kms_key.aft_key.arn
     }
     block_public_access = true
     tags = {
@@ -58,13 +54,13 @@ module "aws_resources" {
   kms_key = {
     description       = "KMS key for AFT resources"
     enable_key_rotation = true
-    policy            = <<EOF
+    policy = <<EOF
 {
   "Version": "2012-10-17",
   "Id": "key-default-1",
   "Statement": [
     {
-      "Sid": "Enable IAM User Permissions",
+      "Sid": "EnableRootAccess",
       "Effect": "Allow",
       "Principal": {
         "AWS": "arn:aws:iam::${var.master_account_id}:root"
@@ -73,10 +69,10 @@ module "aws_resources" {
       "Resource": "*"
     },
     {
-      "Sid": "Allow CloudWatch Logs",
+      "Sid": "AllowCloudWatchLogs",
       "Effect": "Allow",
       "Principal": {
-        "Service": "logs.${var.aws_region}.amazonaws.com"
+        "Service": "logs.us-west-2.amazonaws.com"
       },
       "Action": [
         "kms:Encrypt",
@@ -93,10 +89,9 @@ EOF
   }
 
   sns_topic = {
-    name       = "aft-notifications"
-    encryption = {
-      enabled = true
-      kms_key = aws_kms_key.aft_key.arn
+    name          = "aft-notifications"
+    encryption    = {
+      kms_key_id = aws_kms_key.aft_key.arn
     }
     tags = {
       Environment = "Production"
@@ -109,8 +104,7 @@ EOF
     billing_mode      = "PAY_PER_REQUEST"
     hash_key          = "id"
     encryption        = {
-      enabled = true
-      kms_key = aws_kms_key.aft_key.arn
+      kms_key_id = aws_kms_key.aft_key.arn
     }
     point_in_time_recovery = true
     tags = {
@@ -122,10 +116,7 @@ EOF
   cloudwatch_log_group = {
     name              = "/aws/aft/logs"
     retention_in_days = 90
-    encryption        = {
-      enabled = true
-      kms_key = aws_kms_key.aft_key.arn
-    }
+    kms_key_id        = aws_kms_key.aft_key.arn
     tags = {
       Environment = "Production"
       ManagedBy   = "Terraform"

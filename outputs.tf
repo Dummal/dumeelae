@@ -4,22 +4,22 @@ output "organization_id" {
 }
 
 output "root_id" {
-  description = "The ID of the root organizational unit."
+  description = "The ID of the root in the AWS Organization."
   value       = aws_organizations_organization.org.roots[0].id
 }
 
 output "security_ou_id" {
-  description = "The ID of the Security organizational unit."
+  description = "The ID of the Security Organizational Unit."
   value       = module.control_tower.security_ou_id
 }
 
 output "audit_ou_id" {
-  description = "The ID of the Audit Log organizational unit."
+  description = "The ID of the Audit Log Organizational Unit."
   value       = module.control_tower.audit_ou_id
 }
 
 output "sandbox_ou_id" {
-  description = "The ID of the Sandbox organizational unit."
+  description = "The ID of the Sandbox Organizational Unit."
   value       = module.control_tower.sandbox_ou_id
 }
 
