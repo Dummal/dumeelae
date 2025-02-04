@@ -1,25 +1,15 @@
-output "organization_id" {
-  value = module.aws_organization.organization_id
+output "iam_role_arn" {
+  description = "The ARN of the IAM role created"
+  value       = module.iam.role_arn
 }
 
-output "dev_ou_id" {
-  value = module.aws_organization.dev_ou_id
-}
-
-output "prod_ou_id" {
-  value = module.aws_organization.prod_ou_id
-}
-
-output "dev_account_id" {
-  value = module.aws_organization.dev_account_id
-}
-
-output "prod_account_id" {
-  value = module.aws_organization.prod_account_id
+output "control_tower_account_ids" {
+  description = "The list of account IDs created by Control Tower"
+  value       = module.control_tower.account_ids
 }
 ```
 
 ---
 
-### File 7: `variables.tf`
+### `provider.tf`
 ```hcl
