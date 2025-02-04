@@ -1,15 +1,12 @@
-resource "aws_s3_bucket" "example_bucket" {
-  bucket = "example-bucket-${random_id.bucket_id.hex}"
-  acl    = "private"
-
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
   tags = {
-    Name        = "Example Bucket"
-    Environment = "Production"
+    Name = "multi-account-vpc"
   }
 }
 
-resource "random_id" "bucket_id" {
-  byte_length = 8
+output "vpc_id" {
+  value = aws_vpc.main.id
 }
 ```
 

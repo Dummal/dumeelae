@@ -15,27 +15,24 @@ terraform {
 }
 
 provider "aws" {
-  alias  = "management"
-  region = var.management_account_region
-  profile = var.management_account_profile
-}
-
-provider "aws" {
-  alias  = "member"
-  region = var.member_account_region
-  profile = var.member_account_profile
+  region = var.aws_region
 }
 
 module "iam" {
   source = "./modules/iam"
+  account_id = var.account_id
 }
 
 module "aws_resources" {
   source = "./modules/aws_resources"
+  account_id = var.account_id
+  region     = var.aws_region
 }
 
 module "control_tower" {
   source = "./modules/control_tower"
+  account_id = var.account_id
+  region     = var.aws_region
 }
 ```
 

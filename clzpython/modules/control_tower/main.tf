@@ -1,11 +1,9 @@
-resource "aws_organizations_organization" "example" {
+resource "aws_organizations_organization" "org" {
   feature_set = "ALL"
 }
 
-resource "aws_organizations_account" "member_account" {
-  name      = "MemberAccount"
-  email     = "member@example.com"
-  role_name = "OrganizationAccountAccessRole"
+output "status" {
+  value = "Control Tower setup complete"
 }
 ```
 

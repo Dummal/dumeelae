@@ -1,5 +1,6 @@
-output "s3_bucket_name" {
-  value = aws_s3_bucket.example_bucket.bucket
+output "vpc_id" {
+  description = "VPC ID"
+  value       = aws_vpc.main.id
 }
 ```
 
