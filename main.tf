@@ -8,8 +8,8 @@ module "control_tower" {
   master_account_email  = var.master_account_email
   master_account_id     = var.master_account_id
   organizational_units  = {
-    Security   = "Security",
-    AuditLog   = "Audit Log",
+    Security   = "Security"
+    AuditLog   = "AuditLog"
     Sandbox    = "Sandbox"
   }
   security_account_email = var.security_account_email
@@ -23,14 +23,17 @@ module "iam" {
     aft_execution_role = {
       name        = "AFTExecutionRole"
       description = "Role for AFT Lambda execution"
+      policies    = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
     }
     aft_account_provisioning_role = {
       name        = "AFTAccountProvisioningRole"
       description = "Role for AFT account provisioning"
+      policies    = ["arn:aws:iam::aws:policy/AWSOrganizationsFullAccess"]
     }
     aft_admin_role = {
       name        = "AFTAdminRole"
-      description = "Role for AFT administration"
+      description = "Admin role for AFT management"
+      policies    = ["arn:aws:iam::aws:policy/AdministratorAccess"]
     }
   }
 }
@@ -52,7 +55,7 @@ module "aws_resources" {
   }
 
   kms_key = {
-    description       = "KMS key for AFT resources"
+    description = "KMS key for AFT resources"
     enable_key_rotation = true
     policy = <<EOF
 {
@@ -60,7 +63,7 @@ module "aws_resources" {
   "Id": "key-default-1",
   "Statement": [
     {
-      "Sid": "EnableRootAccess",
+      "Sid": "Enable IAM User Permissions",
       "Effect": "Allow",
       "Principal": {
         "AWS": "arn:aws:iam::${var.master_account_id}:root"
@@ -69,10 +72,10 @@ module "aws_resources" {
       "Resource": "*"
     },
     {
-      "Sid": "AllowCloudWatchLogs",
+      "Sid": "Allow CloudWatch Logs",
       "Effect": "Allow",
       "Principal": {
-        "Service": "logs.us-west-2.amazonaws.com"
+        "Service": "logs.${var.aws_region}.amazonaws.com"
       },
       "Action": [
         "kms:Encrypt",
