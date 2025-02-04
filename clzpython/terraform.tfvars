@@ -1,9 +1,16 @@
-aws_region               = "us-east-1"
-account_id               = "123456789012"
-backend_bucket           = "my-terraform-backend"
-backend_key              = "state/multi-account-setup.tfstate"
-backend_region           = "us-east-1"
-backend_dynamodb_table   = "terraform-locks"
+aws_region         = "us-east-1"
+account_ids        = ["123456789012", "987654321098"]
+organization_unit  = "Engineering"
+iam_roles          = ["Admin", "Developer", "ReadOnly"]
+resources = {
+  s3_buckets = ["bucket1", "bucket2"]
+  ec2_instances = {
+    instance1 = {
+      ami           = "ami-12345678"
+      instance_type = "t2.micro"
+    }
+  }
+}
 ```
 
 ---
