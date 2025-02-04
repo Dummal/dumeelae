@@ -5,7 +5,7 @@ variable "aws_region" {
 }
 
 variable "enable_control_tower" {
-  description = "Flag to enable or disable AWS Control Tower."
+  description = "Flag to enable or disable AWS Control Tower setup."
   type        = bool
 }
 
@@ -20,7 +20,7 @@ variable "master_account_id" {
 }
 
 variable "organizational_units" {
-  description = "List of organizational units to be created."
+  description = "List of organizational units to be created in AWS Control Tower."
   type        = list(string)
 }
 
