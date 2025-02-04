@@ -1,11 +1,9 @@
-aws_region         = "us-east-1"
-account_ids        = ["123456789012", "987654321098"]
-organization_unit  = "Engineering"
-iam_roles          = ["Admin", "Developer", "ReadOnly"]
-resource_tags      = {
-  Environment = "Production"
-  Team        = "DevOps"
-}
+aws_region               = "us-east-1"
+account_id               = "123456789012"
+backend_bucket           = "my-terraform-backend"
+backend_key              = "state/multi-account-setup.tfstate"
+backend_region           = "us-east-1"
+backend_dynamodb_table   = "terraform-locks"
 ```
 
 ---

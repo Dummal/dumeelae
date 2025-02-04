@@ -1,6 +1,6 @@
-output "iam_role_names" {
-  description = "Names of the IAM roles created"
-  value       = aws_iam_role.roles[*].name
+output "role_arn" {
+  description = "IAM Role ARN"
+  value       = aws_iam_role.example.arn
 }
 ```
 

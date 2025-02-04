@@ -1,6 +1,6 @@
-variable "iam_roles" {
-  description = "List of IAM roles to create"
-  type        = list(string)
+variable "account_id" {
+  description = "AWS Account ID"
+  type        = string
 }
 ```
 

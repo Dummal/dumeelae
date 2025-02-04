@@ -1,8 +1,12 @@
-resource "aws_s3_bucket" "buckets" {
-  for_each = toset(var.account_ids)
+resource "aws_vpc" "example" {
+  cidr_block = "10.0.0.0/16"
+  tags = {
+    Name = "example-vpc"
+  }
+}
 
-  bucket = "multi-account-bucket-${each.value}"
-  tags   = var.resource_tags
+output "vpc_id" {
+  value = aws_vpc.example.id
 }
 ```
 

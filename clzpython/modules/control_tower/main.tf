@@ -1,12 +1,9 @@
-resource "aws_organizations_organizational_unit" "ou" {
-  name      = var.organization_unit
-  parent_id = data.aws_organizations_organization.root_id
+resource "aws_organizations_organization" "example" {
+  feature_set = "ALL"
 }
 
-data "aws_organizations_organization" "organization" {}
-
-output "ou_id" {
-  value = aws_organizations_organizational_unit.ou.id
+output "status" {
+  value = "Control Tower setup complete"
 }
 ```
 

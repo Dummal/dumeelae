@@ -1,5 +1,10 @@
-variable "organization_unit" {
-  description = "The name of the organization unit for Control Tower"
+variable "account_id" {
+  description = "AWS Account ID"
+  type        = string
+}
+
+variable "region" {
+  description = "AWS Region"
   type        = string
 }
 ```

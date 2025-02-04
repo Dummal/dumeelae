@@ -1,11 +1,11 @@
-variable "account_ids" {
-  description = "List of AWS account IDs for the multi-account setup"
-  type        = list(string)
+variable "account_id" {
+  description = "AWS Account ID"
+  type        = string
 }
 
-variable "resource_tags" {
-  description = "Tags to apply to all resources"
-  type        = map(string)
+variable "region" {
+  description = "AWS Region"
+  type        = string
 }
 ```
 
