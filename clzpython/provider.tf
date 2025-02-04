@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 provider "aws" {
-  alias  = "management"
+  alias  = "org"
   region = "us-east-1"
 }
 ```

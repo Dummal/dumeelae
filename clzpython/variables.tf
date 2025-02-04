@@ -7,4 +7,4 @@ variable "region" {
 
 ---
 
-This configuration sets up an AWS Organization with two organizational units (Development and Production), creates accounts for each OU, and applies a Service Control Policy (SCP) to restrict actions. You can customize the email addresses, policy content, and other parameters as needed.
+This configuration sets up an AWS Organization with two accounts (Development and Production) and a cross-account IAM role. You can expand this setup by adding more accounts, policies, or other resources as needed.
