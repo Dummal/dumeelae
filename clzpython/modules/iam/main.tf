@@ -1,22 +1,19 @@
-resource "aws_iam_role" "iam_role" {
-  name = "multi-account-role"
+resource "aws_iam_role" "roles" {
+  for_each = toset(var.iam_roles)
 
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Principal = {
-          AWS = "arn:aws:iam::${var.account_id}:root"
-        }
-        Action = "sts:AssumeRole"
-      }
-    ]
-  })
+  name               = each.value
+  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
-output "role_arn" {
-  value = aws_iam_role.iam_role.arn
+data "aws_iam_policy_document" "assume_role_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
 }
 ```
 
