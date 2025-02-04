@@ -1,5 +1,7 @@
-resource "aws_iam_role" "example_role" {
-  name               = "example-role"
+resource "aws_iam_role" "roles" {
+  for_each = toset(var.iam_roles)
+
+  name               = each.value
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
@@ -17,5 +19,5 @@ data "aws_iam_policy_document" "assume_role_policy" {
 
 ---
 
-#### `modules/iam/variables.tf`
+#### `# FILE: modules/iam/variables.tf`
 ```hcl

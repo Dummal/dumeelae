@@ -1,14 +1,16 @@
-management_account_region      = "us-east-1"
-management_account_profile     = "management"
-shared_services_account_region = "us-west-2"
-shared_services_account_profile = "shared-services"
-workload_account_region        = "us-west-1"
-workload_account_profile       = "workload"
+aws_region         = "us-east-1"
+account_ids        = ["123456789012", "987654321098"]
+organization_unit  = "Engineering"
+iam_roles          = ["Admin", "Developer", "ReadOnly"]
+resource_tags      = {
+  Environment = "Production"
+  Team        = "DevOps"
+}
 ```
 
 ---
 
 ### IAM Module Files
 
-#### `modules/iam/main.tf`
+#### `# FILE: modules/iam/main.tf`
 ```hcl

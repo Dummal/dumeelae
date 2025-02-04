@@ -1,35 +1,31 @@
-variable "management_account_region" {
-  description = "AWS region for the management account"
+variable "aws_region" {
+  description = "The AWS region to deploy resources in"
+  type        = string
+  default     = "us-east-1"
+}
+
+variable "account_ids" {
+  description = "List of AWS account IDs for the multi-account setup"
+  type        = list(string)
+}
+
+variable "organization_unit" {
+  description = "The name of the organization unit for Control Tower"
   type        = string
 }
 
-variable "management_account_profile" {
-  description = "AWS CLI profile for the management account"
-  type        = string
+variable "iam_roles" {
+  description = "List of IAM roles to create"
+  type        = list(string)
 }
 
-variable "shared_services_account_region" {
-  description = "AWS region for the shared services account"
-  type        = string
-}
-
-variable "shared_services_account_profile" {
-  description = "AWS CLI profile for the shared services account"
-  type        = string
-}
-
-variable "workload_account_region" {
-  description = "AWS region for the workload account"
-  type        = string
-}
-
-variable "workload_account_profile" {
-  description = "AWS CLI profile for the workload account"
-  type        = string
+variable "resource_tags" {
+  description = "Tags to apply to all resources"
+  type        = map(string)
 }
 ```
 
 ---
 
-#### `outputs.tf`
+#### `# FILE: outputs.tf`
 ```hcl

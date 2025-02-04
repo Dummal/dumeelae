@@ -1,19 +1,12 @@
-resource "aws_s3_bucket" "example_bucket" {
-  bucket = "example-bucket-${random_id.bucket_id.hex}"
-  acl    = "private"
+resource "aws_s3_bucket" "buckets" {
+  for_each = toset(var.account_ids)
 
-  tags = {
-    Name        = "Example Bucket"
-    Environment = "Production"
-  }
-}
-
-resource "random_id" "bucket_id" {
-  byte_length = 8
+  bucket = "multi-account-bucket-${each.value}"
+  tags   = var.resource_tags
 }
 ```
 
 ---
 
-#### `modules/aws_resources/variables.tf`
+#### `# FILE: modules/aws_resources/variables.tf`
 ```hcl

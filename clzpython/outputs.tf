@@ -1,17 +1,20 @@
 output "iam_outputs" {
-  value = module.iam
+  description = "Outputs from the IAM module"
+  value       = module.iam
 }
 
 output "aws_resources_outputs" {
-  value = module.aws_resources
+  description = "Outputs from the AWS Resources module"
+  value       = module.aws_resources
 }
 
 output "control_tower_outputs" {
-  value = module.control_tower
+  description = "Outputs from the Control Tower module"
+  value       = module.control_tower
 }
 ```
 
 ---
 
-#### `provider.tf`
+#### `# FILE: provider.tf`
 ```hcl

@@ -1,7 +1,10 @@
-# No variables defined for this module yet.
+variable "iam_roles" {
+  description = "List of IAM roles to create"
+  type        = list(string)
+}
 ```
 
 ---
 
-#### `modules/iam/outputs.tf`
+#### `# FILE: modules/iam/outputs.tf`
 ```hcl

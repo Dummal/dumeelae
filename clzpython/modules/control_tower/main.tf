@@ -1,21 +1,16 @@
-resource "aws_organizations_organization" "org" {
-  feature_set = "ALL"
+resource "aws_organizations_organizational_unit" "ou" {
+  name      = var.organization_unit
+  parent_id = data.aws_organizations_organization.root_id
 }
 
-resource "aws_organizations_account" "shared_services_account" {
-  name      = "SharedServicesAccount"
-  email     = "shared-services@example.com"
-  role_name = "OrganizationAccountAccessRole"
-}
+data "aws_organizations_organization" "organization" {}
 
-resource "aws_organizations_account" "workload_account" {
-  name      = "WorkloadAccount"
-  email     = "workload@example.com"
-  role_name = "OrganizationAccountAccessRole"
+output "ou_id" {
+  value = aws_organizations_organizational_unit.ou.id
 }
 ```
 
 ---
 
-#### `modules/control_tower/variables.tf`
+#### `# FILE: modules/control_tower/variables.tf`
 ```hcl

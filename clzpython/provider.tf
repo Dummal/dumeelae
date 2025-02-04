@@ -1,7 +1,9 @@
-# Providers are already defined in main.tf for each account.
+provider "aws" {
+  region = var.aws_region
+}
 ```
 
 ---
 
-#### `terraform.tfvars`
+#### `# FILE: terraform.tfvars`
 ```hcl

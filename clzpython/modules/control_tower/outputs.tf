@@ -1,16 +1,9 @@
-output "organization_id" {
-  value = aws_organizations_organization.org.id
-}
-
-output "shared_services_account_id" {
-  value = aws_organizations_account.shared_services_account.id
-}
-
-output "workload_account_id" {
-  value = aws_organizations_account.workload_account.id
+output "organizational_unit_id" {
+  description = "ID of the created organizational unit"
+  value       = aws_organizations_organizational_unit.ou.id
 }
 ```
 
 ---
 
-This configuration sets up a multi-account AWS environment with a management account, shared services account, and workload account. It uses modules for IAM, AWS resources, and Control Tower to organize the infrastructure. You can expand these modules further based on your specific requirements.
+This configuration sets up a multi-account AWS environment with IAM roles, S3 buckets for each account, and an organizational unit in AWS Control Tower. You can customize the variables in `terraform.tfvars` to suit your specific requirements.

@@ -1,7 +1,10 @@
-# No variables defined for this module yet.
+variable "organization_unit" {
+  description = "The name of the organization unit for Control Tower"
+  type        = string
+}
 ```
 
 ---
 
-#### `modules/control_tower/outputs.tf`
+#### `# FILE: modules/control_tower/outputs.tf`
 ```hcl
