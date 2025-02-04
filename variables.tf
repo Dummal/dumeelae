@@ -1,13 +1,12 @@
 variable "aws_region" {
-  description = "The AWS region to deploy resources in."
+  description = "The AWS region where resources will be created."
   type        = string
   default     = "us-west-2"
 }
 
 variable "enable_control_tower" {
-  description = "Flag to enable AWS Control Tower."
+  description = "Flag to enable or disable AWS Control Tower."
   type        = bool
-  default     = true
 }
 
 variable "master_account_email" {
@@ -21,9 +20,8 @@ variable "master_account_id" {
 }
 
 variable "organizational_units" {
-  description = "List of organizational units to create."
+  description = "List of organizational units to be created in AWS Control Tower."
   type        = list(string)
-  default     = ["Security", "Audit Log", "Sandbox"]
 }
 
 variable "dev_account_email" {
@@ -52,46 +50,21 @@ variable "audit_account_email" {
 }
 
 variable "aft_logs_bucket_name" {
-  description = "Name of the S3 bucket for AFT logs."
+  description = "Name of the S3 bucket for storing AFT logs."
   type        = string
-  default     = "aft-logs-bucket-863518414447"
 }
 
-variable "kms_key_rotation_enabled" {
-  description = "Flag to enable KMS key rotation."
-  type        = bool
-  default     = true
-}
-
-variable "sns_topic_name" {
-  description = "Name of the SNS topic for notifications."
+variable "organization_name" {
+  description = "Name of the AWS Organization."
   type        = string
-  default     = "aft-notifications"
 }
 
-variable "dynamodb_table_name" {
-  description = "Name of the DynamoDB table for AFT requests."
+variable "parent_id" {
+  description = "Parent ID for the organizational units."
   type        = string
-  default     = "aft-requests"
 }
 
-variable "cloudwatch_log_group_name" {
-  description = "Name of the CloudWatch Log Group for AFT logs."
-  type        = string
-  default     = "/aws/aft/logs"
-}
-
-variable "cloudwatch_log_retention_days" {
-  description = "Retention period for CloudWatch logs in days."
-  type        = number
-  default     = 90
-}
-
-variable "resource_tags" {
-  description = "Tags to apply to all resources."
-  type        = map(string)
-  default     = {
-    Environment = "Production"
-    ManagedBy   = "Terraform"
-  }
+variable "users_email" {
+  description = "List of email addresses for users in the organization."
+  type        = list(string)
 }
