@@ -8,9 +8,9 @@ module "control_tower" {
   master_account_email  = var.master_account_email
   master_account_id     = var.master_account_id
   organizational_units  = {
-    Security   = "Security"
-    AuditLog   = "AuditLog"
-    Sandbox    = "Sandbox"
+    Security  = "Security"
+    AuditLog  = "AuditLog"
+    Sandbox   = "Sandbox"
   }
   security_account_email = var.security_account_email
   audit_account_email    = var.audit_account_email
@@ -55,7 +55,7 @@ module "aws_resources" {
   }
 
   kms_key = {
-    description = "KMS key for AFT resources"
+    description       = "KMS key for AFT resources"
     enable_key_rotation = true
     policy = <<EOF
 {
