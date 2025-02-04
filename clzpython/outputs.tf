@@ -4,7 +4,7 @@ value       = module.iam
 }
 
 output "aws_resources_outputs" {
-description = "Outputs from the AWS resources module"
+description = "Outputs from the AWS Resources module"
 value       = module.aws_resources
 }
 

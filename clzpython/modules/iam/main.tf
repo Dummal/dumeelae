@@ -1,19 +1,20 @@
 resource "aws_iam_role" "roles" {
 for_each = toset(var.iam_roles)
 
-name               = each.value
-assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
-}
+name = each.value
 
-data "aws_iam_policy_document" "assume_role_policy" {
-statement {
-actions = ["sts:AssumeRole"]
-
-principals {
-type        = "Service"
-identifiers = ["ec2.amazonaws.com"]
+assume_role_policy = jsonencode({
+Version = "2012-10-17"
+Statement = [
+{
+Effect = "Allow"
+Principal = {
+Service = "ec2.amazonaws.com"
 }
+Action = "sts:AssumeRole"
 }
+]
+})
 }
 
 output "iam_role_names" {

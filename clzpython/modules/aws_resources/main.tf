@@ -2,7 +2,6 @@ resource "aws_s3_bucket" "buckets" {
 for_each = toset(var.resources.s3_buckets)
 
 bucket = each.value
-acl    = "private"
 }
 
 resource "aws_instance" "instances" {

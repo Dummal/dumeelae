@@ -1,10 +1,10 @@
 output "s3_bucket_names" {
-description = "List of S3 bucket names created"
+description = "List of S3 bucket names"
 value       = aws_s3_bucket.buckets[*].bucket
 }
 
 output "ec2_instance_ids" {
-description = "List of EC2 instance IDs created"
+description = "List of EC2 instance IDs"
 value       = aws_instance.instances[*].id
 }
 ```
