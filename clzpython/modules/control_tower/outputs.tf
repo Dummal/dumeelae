@@ -1,14 +1,24 @@
-output "organization_unit" {
-  description = "The created Organizational Unit (OU)"
-  value       = aws_organizations_organizational_unit.ou.id
-}
-
-output "accounts" {
-  description = "List of AWS accounts created"
-  value       = aws_organizations_account.accounts[*].id
+output "account_ids" {
+  value = [for acc in aws_organizations_account.accounts : acc.id]
 }
 ```
 
 ---
 
-This configuration sets up a multi-account AWS environment using Terraform, with IAM roles, AWS resources, and AWS Control Tower for organizational management.
+### Example Usage
+
+To use this setup, you can define the `terraform.tfvars` file with the required values, such as:
+
+```hcl
+backend_bucket           = "my-terraform-backend"
+backend_key              = "multi-account-setup/terraform.tfstate"
+backend_region           = "us-east-1"
+backend_dynamodb_table   = "terraform-lock-table"
+
+account_names = {
+  "DevAccount"  = "dev@example.com"
+  "ProdAccount" = "prod@example.com"
+}
+```
+
+This configuration will create a multi-account AWS setup with IAM roles, a VPC, and AWS Control Tower accounts.

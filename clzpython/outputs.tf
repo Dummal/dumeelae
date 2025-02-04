@@ -1,16 +1,16 @@
-output "iam_outputs" {
-  description = "Outputs from the IAM module"
-  value       = module.iam
+output "iam_role_arn" {
+  value       = module.iam.role_arn
+  description = "IAM Role ARN"
 }
 
-output "aws_resources_outputs" {
-  description = "Outputs from the AWS Resources module"
-  value       = module.aws_resources
+output "vpc_id" {
+  value       = module.aws_resources.vpc_id
+  description = "VPC ID"
 }
 
-output "control_tower_outputs" {
-  description = "Outputs from the Control Tower module"
-  value       = module.control_tower
+output "control_tower_account_ids" {
+  value       = module.control_tower.account_ids
+  description = "Control Tower Account IDs"
 }
 ```
 
