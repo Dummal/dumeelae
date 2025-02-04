@@ -1,26 +1,25 @@
-### **outputs.tf**
-This file defines the outputs for the setup.
-
-```hcl
-output "vpc_id" {
-  description = "The ID of the VPC"
-  value       = aws_vpc.main.id
+output "organization_id" {
+  value = module.aws_organization.organization_id
 }
 
-output "public_subnet_ids" {
-  description = "The IDs of the public subnets"
-  value       = aws_subnet.public[*].id
+output "dev_ou_id" {
+  value = module.aws_organization.dev_ou_id
 }
 
-output "ec2_instance_ids" {
-  description = "The IDs of the EC2 instances"
-  value       = aws_instance.web[*].id
+output "prod_ou_id" {
+  value = module.aws_organization.prod_ou_id
 }
 
-output "ec2_instance_public_ips" {
-  description = "The public IPs of the EC2 instances"
-  value       = aws_instance.web[*].public_ip
+output "dev_account_id" {
+  value = module.aws_organization.dev_account_id
+}
+
+output "prod_account_id" {
+  value = module.aws_organization.prod_account_id
 }
 ```
 
 ---
+
+### File 7: `variables.tf`
+```hcl

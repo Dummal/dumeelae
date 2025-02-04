@@ -1,10 +1,14 @@
-### **provider.tf**
-This file configures the AWS provider.
-
-```hcl
 provider "aws" {
-  region = var.aws_region
+  region = "us-east-1"
+}
+
+provider "aws" {
+  alias  = "management"
+  region = "us-east-1"
 }
 ```
 
 ---
+
+### File 2: `main.tf`
+```hcl
