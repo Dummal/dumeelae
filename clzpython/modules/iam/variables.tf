@@ -1,7 +1,7 @@
-# No variables are defined for this module yet.
+# No variables required for this module
 ```
 
 ---
 
-### `modules/iam/outputs.tf`
+#### `modules/iam/outputs.tf`
 ```hcl

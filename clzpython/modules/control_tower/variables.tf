@@ -1,7 +1,7 @@
-# No variables are defined for this module yet.
+# No variables required for this module
 ```
 
 ---
 
-### `modules/control_tower/outputs.tf`
+#### `modules/control_tower/outputs.tf`
 ```hcl

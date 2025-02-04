@@ -12,5 +12,5 @@ terraform {
 
 ---
 
-### `terraform.tfvars`
+#### `terraform.tfvars`
 ```hcl

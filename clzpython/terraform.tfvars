@@ -3,5 +3,7 @@ aws_region = "us-east-1"
 
 ---
 
-### `modules/iam/main.tf`
+### IAM Module Files
+
+#### `modules/iam/main.tf`
 ```hcl

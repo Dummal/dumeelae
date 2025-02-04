@@ -11,5 +11,5 @@ output "control_tower_account_ids" {
 
 ---
 
-### `provider.tf`
+#### `provider.tf`
 ```hcl

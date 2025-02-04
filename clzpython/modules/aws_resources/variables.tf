@@ -1,7 +1,7 @@
-# No variables are defined for this module yet.
+# No variables required for this module
 ```
 
 ---
 
-### `modules/aws_resources/outputs.tf`
+#### `modules/aws_resources/outputs.tf`
 ```hcl

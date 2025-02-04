@@ -6,5 +6,7 @@ output "role_arn" {
 
 ---
 
-### `modules/aws_resources/main.tf`
+### AWS Resources Module Files
+
+#### `modules/aws_resources/main.tf`
 ```hcl

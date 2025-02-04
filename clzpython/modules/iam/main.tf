@@ -13,13 +13,9 @@ data "aws_iam_policy_document" "assume_role_policy" {
     }
   }
 }
-
-output "role_arn" {
-  value = aws_iam_role.example.arn
-}
 ```
 
 ---
 
-### `modules/iam/variables.tf`
+#### `modules/iam/variables.tf`
 ```hcl

@@ -7,5 +7,5 @@ variable "aws_region" {
 
 ---
 
-### `outputs.tf`
+#### `outputs.tf`
 ```hcl

@@ -1,4 +1,4 @@
-output "bucket_name" {
+output "s3_bucket_name" {
   description = "The name of the S3 bucket"
   value       = aws_s3_bucket.example.bucket
 }
@@ -6,5 +6,7 @@ output "bucket_name" {
 
 ---
 
-### `modules/control_tower/main.tf`
+### Control Tower Module Files
+
+#### `modules/control_tower/main.tf`
 ```hcl
