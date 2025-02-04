@@ -8,8 +8,8 @@ module "control_tower" {
   master_account_email  = var.master_account_email
   master_account_id     = var.master_account_id
   organizational_units  = {
-    Security  = "Security"
-    AuditLog  = "AuditLog"
+    Security  = "Security",
+    AuditLog  = "AuditLog",
     Sandbox   = "Sandbox"
   }
   security_account_email = var.security_account_email
@@ -45,7 +45,8 @@ module "aws_resources" {
     name          = "aft-logs-bucket-863518414447"
     versioning    = true
     encryption    = {
-      kms_key_id = aws_kms_key.aft_key.arn
+      enabled = true
+      kms_key = aws_kms_key.aft_key.arn
     }
     block_public_access = true
     tags = {
@@ -57,7 +58,7 @@ module "aws_resources" {
   kms_key = {
     description       = "KMS key for AFT resources"
     enable_key_rotation = true
-    policy = <<EOF
+    policy            = <<EOF
 {
   "Version": "2012-10-17",
   "Id": "key-default-1",
@@ -92,9 +93,10 @@ EOF
   }
 
   sns_topic = {
-    name          = "aft-notifications"
-    encryption    = {
-      kms_key_id = aws_kms_key.aft_key.arn
+    name       = "aft-notifications"
+    encryption = {
+      enabled = true
+      kms_key = aws_kms_key.aft_key.arn
     }
     tags = {
       Environment = "Production"
@@ -107,7 +109,8 @@ EOF
     billing_mode      = "PAY_PER_REQUEST"
     hash_key          = "id"
     encryption        = {
-      kms_key_id = aws_kms_key.aft_key.arn
+      enabled = true
+      kms_key = aws_kms_key.aft_key.arn
     }
     point_in_time_recovery = true
     tags = {
@@ -119,7 +122,10 @@ EOF
   cloudwatch_log_group = {
     name              = "/aws/aft/logs"
     retention_in_days = 90
-    kms_key_id        = aws_kms_key.aft_key.arn
+    encryption        = {
+      enabled = true
+      kms_key = aws_kms_key.aft_key.arn
+    }
     tags = {
       Environment = "Production"
       ManagedBy   = "Terraform"

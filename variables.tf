@@ -20,7 +20,7 @@ variable "master_account_id" {
 }
 
 variable "organizational_units" {
-  description = "List of organizational units to be created in AWS Control Tower."
+  description = "List of organizational units to be created."
   type        = list(string)
 }
 
