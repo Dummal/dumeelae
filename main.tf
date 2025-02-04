@@ -8,8 +8,8 @@ module "control_tower" {
   master_account_email  = var.master_account_email
   master_account_id     = var.master_account_id
   organizational_units  = {
-    Security  = "Security",
-    AuditLog  = "AuditLog",
+    Security  = "Security"
+    AuditLog  = "AuditLog"
     Sandbox   = "Sandbox"
   }
   security_account_email = var.security_account_email
@@ -23,14 +23,17 @@ module "iam" {
     aft_execution_role = {
       name        = "AFTExecutionRole"
       description = "Role for AFT Lambda execution"
+      policies    = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
     }
     aft_account_provisioning_role = {
       name        = "AFTAccountProvisioningRole"
       description = "Role for AFT account provisioning"
+      policies    = ["arn:aws:iam::aws:policy/AWSOrganizationsFullAccess"]
     }
     aft_admin_role = {
       name        = "AFTAdminRole"
-      description = "Role for AFT management"
+      description = "Admin role for AFT management"
+      policies    = ["arn:aws:iam::aws:policy/AdministratorAccess"]
     }
   }
 }
@@ -72,7 +75,7 @@ module "aws_resources" {
       "Sid": "Allow CloudWatch Logs",
       "Effect": "Allow",
       "Principal": {
-        "Service": "logs.us-west-2.amazonaws.com"
+        "Service": "logs.${var.aws_region}.amazonaws.com"
       },
       "Action": [
         "kms:Encrypt",
@@ -100,10 +103,10 @@ EOF
   }
 
   dynamodb_table = {
-    name          = "aft-requests"
-    billing_mode  = "PAY_PER_REQUEST"
-    hash_key      = "id"
-    encryption    = {
+    name              = "aft-requests"
+    billing_mode      = "PAY_PER_REQUEST"
+    hash_key          = "id"
+    encryption        = {
       kms_key_id = aws_kms_key.aft_key.arn
     }
     point_in_time_recovery = true
