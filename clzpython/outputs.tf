@@ -1,16 +1,16 @@
-output "iam_role_arns" {
-  description = "List of IAM role ARNs created"
-  value       = module.iam.role_arns
+output "iam_role_arn" {
+  description = "IAM Role ARN created in the management account"
+  value       = module.iam.role_arn
 }
 
-output "aws_resources" {
-  description = "Details of AWS resources created"
-  value       = module.aws_resources.resources
+output "s3_bucket_name" {
+  description = "S3 bucket name created in the member account"
+  value       = module.aws_resources.s3_bucket_name
 }
 
-output "control_tower_status" {
-  description = "Control Tower setup status"
-  value       = module.control_tower.status
+output "control_tower_organizational_unit_id" {
+  description = "Control Tower Organizational Unit ID"
+  value       = module.control_tower.organizational_unit_id
 }
 ```
 

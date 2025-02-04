@@ -1,25 +1,22 @@
-resource "aws_iam_role" "cross_account_role" {
-  for_each = toset(var.account_ids)
+resource "aws_iam_role" "example" {
+  name = "example-role"
 
-  name               = "CrossAccountRole-${each.key}"
-  assume_role_policy = data.aws_iam_policy_document.assume_role_policy[each.key].json
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action    = "sts:AssumeRole"
+        Effect    = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      },
+    ]
+  })
 }
 
-data "aws_iam_policy_document" "assume_role_policy" {
-  for_each = toset(var.account_ids)
-
-  statement {
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "AWS"
-      identifiers = [each.key]
-    }
-  }
-}
-
-output "role_arns" {
-  value = aws_iam_role.cross_account_role.*.arn
+output "role_arn" {
+  value = aws_iam_role.example.arn
 }
 ```
 
