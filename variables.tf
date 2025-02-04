@@ -50,7 +50,7 @@ variable "audit_account_email" {
 }
 
 variable "aft_logs_bucket_name" {
-  description = "Name of the S3 bucket for storing AFT logs."
+  description = "Name of the S3 bucket for AFT logs."
   type        = string
 }
 
