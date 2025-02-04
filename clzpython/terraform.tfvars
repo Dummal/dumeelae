@@ -12,7 +12,7 @@ member_account_profile = "member-account"
 
 ---
 
-### IAM Module
+### IAM Module Files
 
 #### `# FILE: modules/iam/main.tf`
 ```hcl

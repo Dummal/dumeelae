@@ -4,7 +4,7 @@ variable "backend_bucket" {
 }
 
 variable "backend_key" {
-  description = "Key for Terraform state file in S3"
+  description = "Key for Terraform state file"
   type        = string
 }
 
