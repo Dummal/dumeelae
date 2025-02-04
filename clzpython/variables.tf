@@ -7,4 +7,4 @@ variable "region" {
 
 ---
 
-This configuration sets up an AWS Organization with two accounts (Development and Production) and a cross-account IAM role. You can expand this setup by adding more accounts, policies, or other resources as needed.
+This configuration sets up an AWS Organization with two organizational units (Development and Production) and two accounts (DevAccount and ProdAccount). It also attaches a Service Control Policy (SCP) to the root of the organization. You can expand this configuration further based on your specific requirements.
