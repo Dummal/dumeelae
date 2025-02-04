@@ -1,11 +1,25 @@
 ### **terraform.tfvars**
+This file provides values for the variables.
+
 ```hcl
-aws_region       = "us-west-2"
-vpc_cidr_block   = "10.0.0.0/16"
-azs              = ["us-west-2a", "us-west-2b", "us-west-2c"]
-public_subnets   = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-private_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
-enable_nat_gateway = true
+aws_region = "us-west-2"
+key_name   = "my-key-pair"
+
+tags = {
+  Environment = "Production"
+  ManagedBy   = "Terraform"
+}
 ```
 
 ---
+
+### **Explanation of the Setup**
+1. **VPC**: A single VPC is created with a CIDR block of `10.0.0.0/16`.
+2. **Subnets**: Public subnets are created in multiple availability zones, each with its own CIDR block.
+3. **Internet Gateway**: An internet gateway is attached to the VPC to allow internet access.
+4. **Route Table**: A public route table is created and associated with the public subnets.
+5. **Security Group**: A security group is created to allow SSH (port 22) and HTTP (port 80) access.
+6. **EC2 Instances**: An EC2 instance is launched in each public subnet, using the latest Amazon Linux 2 AMI.
+7. **Outputs**: Outputs include the VPC ID, public subnet IDs, EC2 instance IDs, and public IPs of the instances.
+
+This configuration ensures a highly available setup by distributing resources across multiple availability zones.
