@@ -1,6 +1,4 @@
-provider "aws" {
-region = var.aws_region
-}
+# Providers are already defined in main.tf
 ```
 
 ---

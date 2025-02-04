@@ -1,12 +1,12 @@
-output "iam_roles" {
-description = "List of IAM roles created"
-value       = aws_iam_role.roles[*].name
+output "role_arn" {
+  description = "IAM Role ARN"
+  value       = aws_iam_role.example.arn
 }
 ```
 
 ---
 
-### AWS Resources Module Files
+### AWS Resources Module
 
 #### `# FILE: modules/aws_resources/main.tf`
 ```hcl
