@@ -15,23 +15,48 @@ dynamodb_table = var.backend_dynamodb_table
 }
 
 provider "aws" {
-region = var.region
+alias  = "management"
+region = var.management_account_region
+profile = var.management_account_profile
+}
+
+provider "aws" {
+alias  = "member"
+region = var.member_account_region
+profile = var.member_account_profile
 }
 
 module "iam" {
 source = "./modules/iam"
-account_id = var.account_id
+providers = {
+aws = aws.management
+}
 }
 
 module "aws_resources" {
 source = "./modules/aws_resources"
-region = var.region
+providers = {
+aws = aws.member
+}
 }
 
 module "control_tower" {
 source = "./modules/control_tower"
-management_account_id = var.management_account_id
-member_accounts       = var.member_accounts
+providers = {
+aws = aws.management
+}
+}
+
+output "iam_role_arn" {
+value = module.iam.role_arn
+}
+
+output "s3_bucket_name" {
+value = module.aws_resources.s3_bucket_name
+}
+
+output "control_tower_account_ids" {
+value = module.control_tower.account_ids
 }
 ```
 

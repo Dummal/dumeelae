@@ -1,25 +1,19 @@
 resource "aws_s3_bucket" "example" {
-bucket = "example-bucket-${var.region}"
+bucket = "example-bucket-${random_id.bucket_id.hex}"
 acl    = "private"
+
+tags = {
+Name        = "Example Bucket"
+Environment = "Production"
+}
 }
 
-resource "aws_dynamodb_table" "example" {
-name         = "example-table"
-billing_mode = "PAY_PER_REQUEST"
-hash_key     = "id"
-
-attribute {
-name = "id"
-type = "S"
-}
+resource "random_id" "bucket_id" {
+byte_length = 8
 }
 
 output "s3_bucket_name" {
 value = aws_s3_bucket.example.bucket
-}
-
-output "dynamodb_table_name" {
-value = aws_dynamodb_table.example.name
 }
 ```
 

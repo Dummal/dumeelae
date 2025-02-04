@@ -1,11 +1,6 @@
 output "s3_bucket_name" {
-description = "S3 Bucket Name"
+description = "Name of the S3 bucket"
 value       = aws_s3_bucket.example.bucket
-}
-
-output "dynamodb_table_name" {
-description = "DynamoDB Table Name"
-value       = aws_dynamodb_table.example.name
 }
 ```
 
