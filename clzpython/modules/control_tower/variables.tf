@@ -1,4 +1,4 @@
-# No variables required for this module
+# No variables defined for this module yet.
 ```
 
 ---

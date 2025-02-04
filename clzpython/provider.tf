@@ -1,4 +1,4 @@
-# Providers are already defined in main.tf for this setup.
+# Providers are already defined in main.tf for each account.
 ```
 
 ---

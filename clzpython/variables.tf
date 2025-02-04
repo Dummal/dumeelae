@@ -1,23 +1,3 @@
-variable "backend_bucket" {
-  description = "S3 bucket for Terraform backend"
-  type        = string
-}
-
-variable "backend_key" {
-  description = "Key for Terraform state file in S3"
-  type        = string
-}
-
-variable "backend_region" {
-  description = "Region for Terraform backend"
-  type        = string
-}
-
-variable "backend_dynamodb_table" {
-  description = "DynamoDB table for Terraform state locking"
-  type        = string
-}
-
 variable "management_account_region" {
   description = "AWS region for the management account"
   type        = string
@@ -28,13 +8,23 @@ variable "management_account_profile" {
   type        = string
 }
 
-variable "member_account_region" {
-  description = "AWS region for the member account"
+variable "shared_services_account_region" {
+  description = "AWS region for the shared services account"
   type        = string
 }
 
-variable "member_account_profile" {
-  description = "AWS CLI profile for the member account"
+variable "shared_services_account_profile" {
+  description = "AWS CLI profile for the shared services account"
+  type        = string
+}
+
+variable "workload_account_region" {
+  description = "AWS region for the workload account"
+  type        = string
+}
+
+variable "workload_account_profile" {
+  description = "AWS CLI profile for the workload account"
   type        = string
 }
 ```

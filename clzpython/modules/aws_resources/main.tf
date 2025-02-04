@@ -1,5 +1,5 @@
-resource "aws_s3_bucket" "example" {
-  bucket = "example-bucket-${random_string.suffix.result}"
+resource "aws_s3_bucket" "example_bucket" {
+  bucket = "example-bucket-${random_id.bucket_id.hex}"
   acl    = "private"
 
   tags = {
@@ -8,10 +8,8 @@ resource "aws_s3_bucket" "example" {
   }
 }
 
-resource "random_string" "suffix" {
-  length  = 6
-  special = false
-  upper   = false
+resource "random_id" "bucket_id" {
+  byte_length = 8
 }
 ```
 

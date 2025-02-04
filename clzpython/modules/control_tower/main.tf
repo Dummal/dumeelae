@@ -1,9 +1,18 @@
-resource "aws_organizations_organizational_unit" "example" {
-  name      = "ExampleOU"
-  parent_id = data.aws_organizations_organization.example.roots[0].id
+resource "aws_organizations_organization" "org" {
+  feature_set = "ALL"
 }
 
-data "aws_organizations_organization" "example" {}
+resource "aws_organizations_account" "shared_services_account" {
+  name      = "SharedServicesAccount"
+  email     = "shared-services@example.com"
+  role_name = "OrganizationAccountAccessRole"
+}
+
+resource "aws_organizations_account" "workload_account" {
+  name      = "WorkloadAccount"
+  email     = "workload@example.com"
+  role_name = "OrganizationAccountAccessRole"
+}
 ```
 
 ---
