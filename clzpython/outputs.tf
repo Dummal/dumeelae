@@ -1,11 +1,16 @@
-output "iam_role_arn" {
-  description = "The ARN of the IAM role created"
-  value       = module.iam.role_arn
+output "iam_role_arns" {
+  description = "List of IAM role ARNs created"
+  value       = module.iam.role_arns
 }
 
-output "control_tower_account_ids" {
-  description = "The list of account IDs created by Control Tower"
-  value       = module.control_tower.account_ids
+output "aws_resources" {
+  description = "Details of AWS resources created"
+  value       = module.aws_resources.resources
+}
+
+output "control_tower_status" {
+  description = "Control Tower setup status"
+  value       = module.control_tower.status
 }
 ```
 

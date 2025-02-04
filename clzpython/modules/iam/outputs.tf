@@ -1,6 +1,6 @@
-output "role_arn" {
-  description = "The ARN of the IAM role"
-  value       = aws_iam_role.example.arn
+output "role_arns" {
+  description = "List of IAM role ARNs created"
+  value       = aws_iam_role.cross_account_role.*.arn
 }
 ```
 

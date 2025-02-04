@@ -1,9 +1,9 @@
-output "account_ids" {
-  description = "The list of account IDs created"
-  value       = [aws_organizations_account.example.id]
+output "status" {
+  description = "Control Tower setup status"
+  value       = "Control Tower setup completed for OU: ${aws_organizations_organizational_unit.ou.name}"
 }
 ```
 
 ---
 
-This configuration provides a basic structure for a multi-account AWS setup using Terraform. You can expand and customize it further based on your specific requirements.
+This configuration sets up a multi-account AWS environment with IAM roles, S3 buckets, and an AWS Control Tower organizational unit. Each module is self-contained and reusable.

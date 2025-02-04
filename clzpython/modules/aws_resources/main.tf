@@ -1,10 +1,12 @@
-resource "aws_s3_bucket" "example" {
-  bucket = "example-bucket-${random_id.bucket_id.hex}"
+resource "aws_s3_bucket" "multi_account_buckets" {
+  for_each = toset(var.account_ids)
+
+  bucket = "multi-account-bucket-${each.key}"
   acl    = "private"
 }
 
-resource "random_id" "bucket_id" {
-  byte_length = 8
+output "resources" {
+  value = aws_s3_bucket.multi_account_buckets
 }
 ```
 
