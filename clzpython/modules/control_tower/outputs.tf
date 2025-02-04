@@ -1,9 +1,12 @@
-output "account_ids" {
-description = "List of account IDs created by Control Tower"
-value       = [aws_organizations_account.example.id]
+output "organization_id" {
+value = aws_organizations_organization.example.id
+}
+
+output "account_id" {
+value = aws_organizations_account.example.id
 }
 ```
 
 ---
 
-This configuration sets up a multi-account AWS environment with IAM roles, S3 buckets, and AWS Control Tower accounts. Each module is self-contained and reusable.
+This configuration sets up a multi-account AWS environment using Terraform. It includes modules for IAM, AWS resources, and Control Tower, and is structured to allow for easy customization and scalability.

@@ -1,6 +1,9 @@
-output "role_arn" {
-description = "ARN of the IAM role"
-value       = aws_iam_role.example.arn
+output "iam_role_arn" {
+value = aws_iam_role.example.arn
+}
+
+output "iam_policy_arn" {
+value = aws_iam_policy.example.arn
 }
 ```
 
