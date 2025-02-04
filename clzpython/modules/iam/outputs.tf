@@ -1,5 +1,5 @@
-output "iam_role_names" {
-description = "List of IAM role names"
+output "iam_roles" {
+description = "List of IAM roles created"
 value       = aws_iam_role.roles[*].name
 }
 ```
