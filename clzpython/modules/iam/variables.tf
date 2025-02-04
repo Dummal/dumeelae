@@ -1,13 +1,6 @@
-variable "role_name" {
-description = "Name of the IAM role"
-type        = string
-default     = "example-role"
-}
-
-variable "policy_name" {
-description = "Name of the IAM policy"
-type        = string
-default     = "example-policy"
+variable "iam_roles" {
+description = "List of IAM roles to create"
+type        = list(string)
 }
 ```
 

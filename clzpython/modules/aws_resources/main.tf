@@ -1,17 +1,23 @@
-resource "aws_s3_bucket" "example" {
-bucket = "example-bucket"
+resource "aws_s3_bucket" "buckets" {
+for_each = toset(var.resources.s3_buckets)
+
+bucket = each.value
 acl    = "private"
 }
 
-resource "aws_dynamodb_table" "example" {
-name           = "example-table"
-billing_mode   = "PAY_PER_REQUEST"
-hash_key       = "id"
+resource "aws_instance" "instances" {
+for_each = var.resources.ec2_instances
 
-attribute {
-name = "id"
-type = "S"
+ami           = each.value.ami
+instance_type = each.value.instance_type
 }
+
+output "s3_bucket_names" {
+value = aws_s3_bucket.buckets[*].bucket
+}
+
+output "ec2_instance_ids" {
+value = aws_instance.instances[*].id
 }
 ```
 

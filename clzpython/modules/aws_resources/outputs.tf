@@ -1,9 +1,11 @@
-output "s3_bucket_name" {
-value = aws_s3_bucket.example.bucket
+output "s3_bucket_names" {
+description = "List of S3 bucket names created"
+value       = aws_s3_bucket.buckets[*].bucket
 }
 
-output "dynamodb_table_name" {
-value = aws_dynamodb_table.example.name
+output "ec2_instance_ids" {
+description = "List of EC2 instance IDs created"
+value       = aws_instance.instances[*].id
 }
 ```
 

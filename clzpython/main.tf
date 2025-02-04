@@ -1,24 +1,3 @@
-terraform {
-required_version = ">= 1.3.0"
-required_providers {
-aws = {
-source  = "hashicorp/aws"
-version = "~> 4.0"
-}
-}
-backend "s3" {
-bucket         = var.backend_bucket
-key            = var.backend_key
-region         = var.backend_region
-dynamodb_table = var.backend_dynamodb_table
-encrypt        = true
-}
-}
-
-provider "aws" {
-region = var.region
-}
-
 module "iam" {
 source = "./modules/iam"
 }
@@ -29,6 +8,18 @@ source = "./modules/aws_resources"
 
 module "control_tower" {
 source = "./modules/control_tower"
+}
+
+output "iam_outputs" {
+value = module.iam
+}
+
+output "aws_resources_outputs" {
+value = module.aws_resources
+}
+
+output "control_tower_outputs" {
+value = module.control_tower
 }
 ```
 
