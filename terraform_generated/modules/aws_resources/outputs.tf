@@ -1,0 +1,12 @@
+output "s3_bucket_name" {
+  description = "Name of the S3 bucket"
+  value       = aws_s3_bucket.example.bucket
+}
+```
+
+---
+
+### Control Tower Module Files
+
+#### `# FILE: modules/control_tower/main.tf`
+```hcl
