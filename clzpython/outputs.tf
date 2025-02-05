@@ -3,9 +3,9 @@ output "iam_role_arn" {
   value       = module.iam.role_arn
 }
 
-output "aws_resources_ids" {
-  description = "IDs of AWS resources created"
-  value       = module.aws_resources.resource_ids
+output "vpc_id" {
+  description = "VPC ID"
+  value       = module.aws_resources.vpc_id
 }
 
 output "control_tower_status" {

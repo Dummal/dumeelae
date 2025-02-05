@@ -10,7 +10,7 @@ resource "aws_iam_role" "example" {
         Principal = {
           Service = "ec2.amazonaws.com"
         }
-      },
+      }
     ]
   })
 }

@@ -6,4 +6,4 @@ output "status" {
 
 ---
 
-This configuration sets up a multi-account AWS environment with IAM roles, S3 buckets, DynamoDB tables, and AWS Control Tower. Each module is self-contained and reusable.
+This configuration sets up a multi-account AWS environment with IAM roles, VPCs, and AWS Control Tower. Each module is self-contained and reusable.

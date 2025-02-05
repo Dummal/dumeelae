@@ -1,4 +1,12 @@
-# No variables required for this module
+variable "account_id" {
+  description = "AWS Account ID"
+  type        = string
+}
+
+variable "region" {
+  description = "AWS region"
+  type        = string
+}
 ```
 
 ---

@@ -1,9 +1,6 @@
-output "resource_ids" {
-  description = "IDs of AWS resources created"
-  value       = {
-    s3_bucket = aws_s3_bucket.example.id
-    dynamodb_table = aws_dynamodb_table.example.id
-  }
+output "vpc_id" {
+  description = "VPC ID"
+  value       = aws_vpc.example.id
 }
 ```
 
