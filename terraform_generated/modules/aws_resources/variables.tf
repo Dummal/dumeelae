@@ -1,4 +1,7 @@
-# No variables required for this module
+variable "resources" {
+  description = "Map of AWS resources to create"
+  type        = map(any)
+}
 ```
 
 ---

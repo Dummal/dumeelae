@@ -1,17 +1,14 @@
-resource "aws_s3_bucket" "example" {
-  bucket = "example-bucket-${random_string.suffix.result}"
-  acl    = "private"
+resource "aws_s3_bucket" "buckets" {
+  for_each = toset(var.resources.s3_buckets)
 
-  tags = {
-    Name        = "Example Bucket"
-    Environment = "Production"
-  }
+  bucket = each.value
 }
 
-resource "random_string" "suffix" {
-  length  = 6
-  special = false
-  upper   = false
+resource "aws_instance" "instances" {
+  for_each = var.resources.ec2_instances
+
+  ami           = each.value.ami
+  instance_type = each.value.instance_type
 }
 ```
 
