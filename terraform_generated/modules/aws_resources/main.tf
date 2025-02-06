@@ -1,14 +1,12 @@
-resource "aws_s3_bucket" "buckets" {
-  for_each = toset(var.resources.s3_buckets)
-
-  bucket = each.value
+resource "aws_vpc" "example" {
+  cidr_block = "10.0.0.0/16"
+  tags = {
+    Name = "example-vpc"
+  }
 }
 
-resource "aws_instance" "instances" {
-  for_each = var.resources.ec2_instances
-
-  ami           = each.value.ami
-  instance_type = each.value.instance_type
+output "vpc_id" {
+  value = aws_vpc.example.id
 }
 ```
 

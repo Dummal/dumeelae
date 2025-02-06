@@ -1,10 +1,10 @@
-variable "account_ids" {
-  description = "List of AWS account IDs for the multi-account setup"
-  type        = list(string)
+variable "account_id" {
+  description = "AWS Account ID"
+  type        = string
 }
 
-variable "organization_unit" {
-  description = "The name of the AWS Organization Unit (OU)"
+variable "region" {
+  description = "AWS region"
   type        = string
 }
 ```

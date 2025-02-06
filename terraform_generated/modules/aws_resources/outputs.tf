@@ -1,11 +1,6 @@
-output "s3_buckets" {
-  description = "List of S3 buckets created"
-  value       = aws_s3_bucket.buckets[*].bucket
-}
-
-output "ec2_instances" {
-  description = "List of EC2 instances created"
-  value       = aws_instance.instances[*].id
+output "vpc_id" {
+  description = "VPC ID"
+  value       = aws_vpc.example.id
 }
 ```
 
