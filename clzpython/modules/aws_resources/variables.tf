@@ -1,11 +1,6 @@
-variable "account_id" {
-  description = "AWS Account ID"
-  type        = string
-}
-
-variable "region" {
-  description = "AWS region"
-  type        = string
+variable "resources" {
+  description = "Map of AWS resources to create"
+  type        = map(any)
 }
 ```
 
