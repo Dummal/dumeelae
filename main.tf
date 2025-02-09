@@ -1,164 +1,91 @@
+```hcl
 provider "aws" {
-  region = "us-west-2"
+  region = "us-east-1"
 }
 
-module "control_tower" {
-  source                = "./modules/control_tower"
-  enable_control_tower  = true
-  master_account_email  = var.master_account_email
-  master_account_id     = var.master_account_id
-  organizational_units  = {
-    Security   = "Security",
-    AuditLog   = "Audit Log",
-    Sandbox    = "Sandbox"
-  }
-  security_account_email = var.security_account_email
-  audit_account_email    = var.audit_account_email
+resource "aws_organizations_organization" "org" {
+  feature_set = "ALL"
 }
 
-module "iam" {
-  source = "./modules/iam"
-
-  roles = {
-    aft_execution_role = {
-      name        = "AFTExecutionRole"
-      description = "Role for AFT Lambda execution"
-      policies    = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
-    }
-    aft_account_provisioning_role = {
-      name        = "AFTAccountProvisioningRole"
-      description = "Role for AFT account provisioning"
-      policies    = ["arn:aws:iam::aws:policy/AWSOrganizationsFullAccess"]
-    }
-    aft_admin_role = {
-      name        = "AFTAdminRole"
-      description = "Admin role for AFT management"
-      policies    = ["arn:aws:iam::aws:policy/AdministratorAccess"]
-    }
-  }
+resource "aws_organizations_organizational_unit" "engineering" {
+  name      = "Engineering"
+  parent_id = aws_organizations_organization.org.id
 }
 
-module "aws_resources" {
-  source = "./modules/aws_resources"
+resource "aws_organizations_organizational_unit" "marketing" {
+  name      = "Marketing"
+  parent_id = aws_organizations_organization.org.id
+}
 
-  s3_bucket = {
-    name          = "aft-logs-bucket-863518414447"
-    versioning    = true
-    encryption    = {
-      enabled = true
-      kms_key = aws_kms_key.aft_key.arn
-    }
-    block_public_access = true
-    tags = {
-      Environment = "Production"
-      ManagedBy   = "Terraform"
-    }
-  }
+resource "aws_iam_user" "engineering_user" {
+  name = "engineering_user"
+}
 
-  kms_key = {
-    description       = "KMS key for AFT resources"
-    enable_key_rotation = true
-    policy            = <<EOF
-{
-  "Version": "2012-10-17",
-  "Id": "key-default-1",
-  "Statement": [
-    {
-      "Sid": "Enable IAM User Permissions",
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "arn:aws:iam::${var.master_account_id}:root"
-      },
-      "Action": "kms:*",
-      "Resource": "*"
-    },
-    {
-      "Sid": "Allow CloudWatch Logs",
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "logs.${var.aws_region}.amazonaws.com"
-      },
-      "Action": [
-        "kms:Encrypt",
-        "kms:Decrypt",
-        "kms:ReEncrypt*",
-        "kms:GenerateDataKey*",
-        "kms:DescribeKey"
-      ],
-      "Resource": "*"
-    }
+resource "aws_iam_user" "marketing_user" {
+  name = "marketing_user"
+}
+
+resource "aws_iam_group" "engineering_group" {
+  name = "EngineeringGroup"
+}
+
+resource "aws_iam_group" "marketing_group" {
+  name = "MarketingGroup"
+}
+
+resource "aws_iam_group_membership" "engineering_membership" {
+  name = "engineering_membership"
+  users = [
+    aws_iam_user.engineering_user.name
   ]
-}
-EOF
-  }
-
-  sns_topic = {
-    name       = "aft-notifications"
-    encryption = {
-      enabled = true
-      kms_key = aws_kms_key.aft_key.arn
-    }
-    tags = {
-      Environment = "Production"
-      ManagedBy   = "Terraform"
-    }
-  }
-
-  dynamodb_table = {
-    name              = "aft-requests"
-    billing_mode      = "PAY_PER_REQUEST"
-    hash_key          = "id"
-    encryption        = {
-      enabled = true
-      kms_key = aws_kms_key.aft_key.arn
-    }
-    point_in_time_recovery = true
-    tags = {
-      Environment = "Production"
-      ManagedBy   = "Terraform"
-    }
-  }
-
-  cloudwatch_log_group = {
-    name              = "/aws/aft/logs"
-    retention_in_days = 90
-    encryption        = {
-      enabled = true
-      kms_key = aws_kms_key.aft_key.arn
-    }
-    tags = {
-      Environment = "Production"
-      ManagedBy   = "Terraform"
-    }
-  }
+  group = aws_iam_group.engineering_group.name
 }
 
-resource "aws_organizations_account" "dev_account" {
-  name      = "DevAccount"
-  email     = var.dev_account_email
-  parent_id = module.control_tower.organizational_units["Security"]
-  tags = {
-    Environment = "Production"
-    ManagedBy   = "Terraform"
-  }
+resource "aws_iam_group_membership" "marketing_membership" {
+  name = "marketing_membership"
+  users = [
+    aws_iam_user.marketing_user.name
+  ]
+  group = aws_iam_group.marketing_group.name
 }
 
-resource "aws_organizations_account" "prod_account" {
-  name      = "ProdAccount"
-  email     = var.prod_account_email
-  parent_id = module.control_tower.organizational_units["Security"]
-  tags = {
-    Environment = "Production"
-    ManagedBy   = "Terraform"
-  }
+resource "aws_iam_policy" "engineering_policy" {
+  name        = "EngineeringPolicy"
+  description = "Policy for Engineering group"
+  policy      = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action   = "s3:*"
+        Effect   = "Allow"
+        Resource = "*"
+      }
+    ]
+  })
 }
 
-resource "aws_organizations_account" "shared_account" {
-  name      = "SharedAccount"
-  email     = var.shared_account_email
-  parent_id = module.control_tower.organizational_units["Security"]
-  tags = {
-    Environment = "Production"
-    ManagedBy   = "Terraform"
-  }
+resource "aws_iam_policy" "marketing_policy" {
+  name        = "MarketingPolicy"
+  description = "Policy for Marketing group"
+  policy      = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action   = "dynamodb:*"
+        Effect   = "Allow"
+        Resource = "*"
+      }
+    ]
+  })
 }
+
+resource "aws_iam_group_policy_attachment" "engineering_policy_attachment" {
+  group      = aws_iam_group.engineering_group.name
+  policy_arn = aws_iam_policy.engineering_policy.arn
+}
+
+resource "aws_iam_group_policy_attachment" "marketing_policy_attachment" {
+  group      = aws_iam_group.marketing_group.name
+  policy_arn = aws_iam_policy.marketing_policy.arn
+}
+```

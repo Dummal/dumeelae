@@ -1,70 +1,53 @@
-variable "aws_region" {
-  description = "The AWS region where resources will be created."
-  type        = string
-  default     = "us-west-2"
-}
+```hcl
+// variables.tf
 
-variable "enable_control_tower" {
-  description = "Flag to enable or disable AWS Control Tower setup."
-  type        = bool
-}
-
-variable "master_account_email" {
-  description = "Email address for the master account."
-  type        = string
-}
-
-variable "master_account_id" {
-  description = "AWS account ID for the master account."
-  type        = string
-}
-
-variable "organizational_units" {
-  description = "List of organizational units to be created in AWS Control Tower."
-  type        = list(string)
-}
-
-variable "dev_account_email" {
-  description = "Email address for the Dev account."
-  type        = string
-}
-
-variable "prod_account_email" {
-  description = "Email address for the Prod account."
-  type        = string
-}
-
-variable "shared_account_email" {
-  description = "Email address for the Shared account."
-  type        = string
-}
-
-variable "security_account_email" {
-  description = "Email address for the Security account."
-  type        = string
-}
-
-variable "audit_account_email" {
-  description = "Email address for the Audit account."
-  type        = string
-}
-
-variable "aft_logs_bucket_name" {
-  description = "Name of the S3 bucket for storing AFT logs."
-  type        = string
-}
-
+// Variable for the name of the organization
 variable "organization_name" {
-  description = "Name of the AWS Organization."
+  description = "The name of the AWS organization to be created or managed."
   type        = string
 }
 
+// Variable for the parent ID where the organization unit will be created
 variable "parent_id" {
-  description = "Parent ID for the organizational units."
+  description = "The ID of the parent organizational unit or root under which the new organizational unit will be created."
   type        = string
 }
 
+// Variable for the list of user email addresses
 variable "users_email" {
-  description = "List of email addresses for users in the organization."
+  description = "A list of email addresses for the users to be added to the organization."
   type        = list(string)
 }
+
+// Variable for the AWS region
+variable "aws_region" {
+  description = "The AWS region where resources will be deployed."
+  type        = string
+  default     = "us-east-1"
+}
+
+// Variable for the account alias
+variable "account_alias" {
+  description = "The alias for the AWS account."
+  type        = string
+}
+
+// Variable for the IAM role name
+variable "iam_role_name" {
+  description = "The name of the IAM role to be created or managed."
+  type        = string
+}
+
+// Variable for the policy ARN to attach to the IAM role
+variable "policy_arn" {
+  description = "The ARN of the policy to attach to the IAM role."
+  type        = string
+}
+
+// Variable for the tags to be applied to resources
+variable "tags" {
+  description = "A map of tags to apply to the resources."
+  type        = map(string)
+  default     = {}
+}
+```
