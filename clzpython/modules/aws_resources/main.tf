@@ -1,14 +1,19 @@
-resource "aws_s3_bucket" "buckets" {
-  for_each = toset(var.resources.s3_buckets)
+resource "aws_s3_bucket" "example" {
+  bucket = "example-bucket-${random_id.bucket_id.hex}"
+  acl    = "private"
 
-  bucket = each.value
+  tags = {
+    Name        = "Example Bucket"
+    Environment = "Production"
+  }
 }
 
-resource "aws_instance" "instances" {
-  for_each = var.resources.ec2_instances
+resource "random_id" "bucket_id" {
+  byte_length = 8
+}
 
-  ami           = each.value.ami
-  instance_type = each.value.instance_type
+output "s3_bucket_name" {
+  value = aws_s3_bucket.example.bucket
 }
 ```
 

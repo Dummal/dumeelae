@@ -1,7 +1,4 @@
-variable "iam_roles" {
-  description = "List of IAM roles to create"
-  type        = list(string)
-}
+# No variables required for this module
 ```
 
 ---
