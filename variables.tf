@@ -32,9 +32,9 @@ variable "iam_role_name" {
   type        = string
 }
 
-// Variable for the policy document for the IAM role
-variable "iam_policy_document" {
-  description = "The JSON policy document to attach to the IAM role."
+// Variable for the policy ARN to attach to the IAM role
+variable "policy_arn" {
+  description = "The ARN of the policy to attach to the IAM role."
   type        = string
 }
 
@@ -44,7 +44,7 @@ variable "account_alias" {
   type        = string
 }
 
-// Variable for the tags to be applied to resources
+// Variable for the tags to apply to resources
 variable "tags" {
   description = "A map of tags to apply to the resources."
   type        = map(string)
