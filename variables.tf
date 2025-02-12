@@ -15,7 +15,7 @@ variable "parent_id" {
 
 // Variable for the list of user email addresses
 variable "users_email" {
-  description = "A list of email addresses for the users to be added to the organization."
+  description = "A list of email addresses for the users to be created or managed in the AWS account."
   type        = list(string)
 }
 
@@ -26,21 +26,21 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
-// Variable for the account alias
-variable "account_alias" {
-  description = "The alias for the AWS account."
-  type        = string
-}
-
 // Variable for the IAM role name
 variable "iam_role_name" {
   description = "The name of the IAM role to be created or managed."
   type        = string
 }
 
-// Variable for the policy ARN to attach to the IAM role
-variable "policy_arn" {
-  description = "The ARN of the policy to attach to the IAM role."
+// Variable for the IAM policy name
+variable "iam_policy_name" {
+  description = "The name of the IAM policy to be created or managed."
+  type        = string
+}
+
+// Variable for the account alias
+variable "account_alias" {
+  description = "The alias to assign to the AWS account."
   type        = string
 }
 
