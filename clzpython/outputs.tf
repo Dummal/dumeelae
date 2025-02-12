@@ -1,20 +1,15 @@
-output "management_bucket_arn" {
-  description = "ARN of the S3 bucket in the management account"
-  value       = aws_s3_bucket.management_bucket.arn
+output "instance_id" {
+  description = "The ID of the created instance"
+  value       = aws_instance.example.id
 }
 
-output "dev_bucket_arn" {
-  description = "ARN of the S3 bucket in the dev account"
-  value       = aws_s3_bucket.dev_bucket.arn
-}
-
-output "prod_bucket_arn" {
-  description = "ARN of the S3 bucket in the prod account"
-  value       = aws_s3_bucket.prod_bucket.arn
+output "instance_public_ip" {
+  description = "The public IP of the created instance"
+  value       = aws_instance.example.public_ip
 }
 ```
 
 ---
 
-#### # FILE: provider.tf
+### `provider.tf`
 ```hcl
