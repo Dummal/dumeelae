@@ -1,21 +1,21 @@
 ```hcl
 output "dev_ou_id" {
-  description = "The Organizational Unit ID for the Development environment."
   value       = aws_organizations_organizational_unit.dev.id
+  description = "The ID of the Development Organizational Unit (OU) in AWS Organizations."
 }
 
 output "prod_ou_id" {
-  description = "The Organizational Unit ID for the Production environment."
   value       = aws_organizations_organizational_unit.prod.id
+  description = "The ID of the Production Organizational Unit (OU) in AWS Organizations."
 }
 
 output "security_ou_id" {
-  description = "The Organizational Unit ID for the Security environment."
   value       = aws_organizations_organizational_unit.security.id
+  description = "The ID of the Security Organizational Unit (OU) in AWS Organizations."
 }
 
 output "audit_ou_id" {
-  description = "The Organizational Unit ID for the Audit environment."
   value       = aws_organizations_organizational_unit.audit.id
+  description = "The ID of the Audit Organizational Unit (OU) in AWS Organizations."
 }
 ```

@@ -9,12 +9,12 @@ resource "aws_organizations_organization" "org" {
 
 resource "aws_organizations_organizational_unit" "engineering" {
   name      = "Engineering"
-  parent_id = aws_organizations_organization.org.id
+  parent_id = aws_organizations_organization.org.roots[0].id
 }
 
 resource "aws_organizations_organizational_unit" "marketing" {
   name      = "Marketing"
-  parent_id = aws_organizations_organization.org.id
+  parent_id = aws_organizations_organization.org.roots[0].id
 }
 
 resource "aws_iam_user" "engineering_user" {
