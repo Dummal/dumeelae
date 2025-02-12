@@ -8,14 +8,9 @@ variable "instance_type" {
   type        = string
   default     = "t2.micro"
 }
-
-variable "instance_name" {
-  description = "The name of the instance"
-  type        = string
-}
 ```
 
 ---
 
-### `outputs.tf`
+### `# FILE: outputs.tf`
 ```hcl
