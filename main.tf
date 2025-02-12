@@ -51,7 +51,7 @@ resource "aws_iam_group_membership" "marketing_membership" {
 
 resource "aws_iam_policy" "engineering_policy" {
   name        = "EngineeringPolicy"
-  description = "Policy for Engineering Group"
+  description = "Policy for Engineering group"
   policy      = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -66,7 +66,7 @@ resource "aws_iam_policy" "engineering_policy" {
 
 resource "aws_iam_policy" "marketing_policy" {
   name        = "MarketingPolicy"
-  description = "Policy for Marketing Group"
+  description = "Policy for Marketing group"
   policy      = jsonencode({
     Version = "2012-10-17"
     Statement = [
