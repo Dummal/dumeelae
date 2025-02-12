@@ -1,6 +1,6 @@
-output "s3_bucket_name" {
-  description = "Name of the S3 bucket"
-  value       = aws_s3_bucket.example.bucket
+output "s3_bucket_names" {
+  description = "Names of the created S3 buckets"
+  value       = aws_s3_bucket.buckets[*].id
 }
 ```
 

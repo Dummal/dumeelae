@@ -1,11 +1,16 @@
-resource "aws_organizations_account" "example" {
-  name      = "example-account"
-  email     = "example@example.com"
-  role_name = "OrganizationAccountAccessRole"
+resource "aws_organizations_organizational_unit" "ou" {
+  name      = var.organization_unit
+  parent_id = data.aws_organizations_organization.root_id
 }
 
-output "account_ids" {
-  value = [aws_organizations_account.example.id]
+data "aws_organizations_organization" "organization" {}
+
+resource "aws_organizations_account" "accounts" {
+  for_each = toset(var.account_ids)
+
+  name      = "Account-${each.value}"
+  email     = "account-${each.value}@example.com"
+  role_name = "OrganizationAccountAccessRole"
 }
 ```
 

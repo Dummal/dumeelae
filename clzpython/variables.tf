@@ -1,41 +1,27 @@
-variable "backend_bucket" {
-  description = "S3 bucket for Terraform backend"
+variable "aws_region" {
+  description = "The AWS region to deploy resources"
+  type        = string
+  default     = "us-east-1"
+}
+
+variable "account_ids" {
+  description = "List of AWS account IDs for the multi-account setup"
+  type        = list(string)
+}
+
+variable "organization_unit" {
+  description = "The name of the organization unit for Control Tower"
   type        = string
 }
 
-variable "backend_key" {
-  description = "Key for Terraform state file"
-  type        = string
+variable "iam_roles" {
+  description = "List of IAM roles to create"
+  type        = list(string)
 }
 
-variable "backend_region" {
-  description = "Region for Terraform backend"
-  type        = string
-}
-
-variable "backend_dynamodb_table" {
-  description = "DynamoDB table for Terraform state locking"
-  type        = string
-}
-
-variable "management_account_region" {
-  description = "AWS region for the management account"
-  type        = string
-}
-
-variable "management_account_profile" {
-  description = "AWS CLI profile for the management account"
-  type        = string
-}
-
-variable "member_account_region" {
-  description = "AWS region for the member account"
-  type        = string
-}
-
-variable "member_account_profile" {
-  description = "AWS CLI profile for the member account"
-  type        = string
+variable "resource_tags" {
+  description = "Tags to apply to all resources"
+  type        = map(string)
 }
 ```
 
