@@ -9,3 +9,7 @@ shared_account_email = "shared@example.com"
 security_account_email = "security@example.com"
 audit_account_email = "audit@example.com"
 aft_logs_bucket_name = "aft-logs-bucket-863518414447"
+tags = {
+  Environment = "Production"
+  ManagedBy   = "Terraform"
+}

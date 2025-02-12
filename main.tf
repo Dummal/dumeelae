@@ -9,12 +9,12 @@ resource "aws_organizations_organization" "org" {
 
 resource "aws_organizations_organizational_unit" "engineering" {
   name      = "Engineering"
-  parent_id = aws_organizations_organization.org.id
+  parent_id = aws_organizations_organization.org.roots[0].id
 }
 
 resource "aws_organizations_organizational_unit" "marketing" {
   name      = "Marketing"
-  parent_id = aws_organizations_organization.org.id
+  parent_id = aws_organizations_organization.org.roots[0].id
 }
 
 resource "aws_iam_user" "engineering_user" {
@@ -51,7 +51,7 @@ resource "aws_iam_group_membership" "marketing_membership" {
 
 resource "aws_iam_policy" "engineering_policy" {
   name        = "EngineeringPolicy"
-  description = "Policy for Engineering group"
+  description = "Policy for Engineering Group"
   policy      = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -66,7 +66,7 @@ resource "aws_iam_policy" "engineering_policy" {
 
 resource "aws_iam_policy" "marketing_policy" {
   name        = "MarketingPolicy"
-  description = "Policy for Marketing group"
+  description = "Policy for Marketing Group"
   policy      = jsonencode({
     Version = "2012-10-17"
     Statement = [
