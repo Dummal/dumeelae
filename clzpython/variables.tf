@@ -1,21 +1,21 @@
 variable "organization_name" {
+  description = "The name of the AWS Organization"
   type        = string
-  description = "The name of the AWS organization."
 }
 
 variable "parent_id" {
+  description = "The ID of the parent organizational unit"
   type        = string
-  description = "The ID of the parent organizational unit."
 }
 
 variable "users_email" {
+  description = "A list of email addresses for IAM users"
   type        = list(string)
-  description = "A list of email addresses for IAM users."
 }
 
 variable "aws_region" {
+  description = "The AWS region to deploy resources in"
   type        = string
-  description = "The AWS region to deploy resources in."
 }
 ```
 
