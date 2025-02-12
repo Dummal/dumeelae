@@ -18,7 +18,7 @@ resource "aws_organizations_organizational_unit" "audit" {
   parent_id = var.parent_id
 }
 
-resource "aws_iam_user" "user" {
+resource "aws_iam_user" "users" {
   for_each = toset(var.users_email)
   name     = each.value
 }
