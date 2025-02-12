@@ -32,13 +32,19 @@ variable "iam_role_name" {
   type        = string
 }
 
+// Variable for the policy ARN to attach to the IAM role
+variable "policy_arn" {
+  description = "The ARN of the policy to attach to the IAM role."
+  type        = string
+}
+
 // Variable for the account alias
 variable "account_alias" {
   description = "The alias to assign to the AWS account."
   type        = string
 }
 
-// Variable for the tags to be applied to resources
+// Variable for the tags to apply to resources
 variable "tags" {
   description = "A map of tags to apply to the resources."
   type        = map(string)
