@@ -5,4 +5,4 @@ instance_type = "t2.micro"
 
 ---
 
-This structure adheres to the requested format and dynamically generates the Terraform scripts based on the placeholders provided. Let me know if you need further customization!
+This structure ensures that the Terraform scripts are modular, easy to manage, and follow the requested format. Let me know if you need further customization!
