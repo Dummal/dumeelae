@@ -1,31 +1,53 @@
-variable "aws_region" {
-  description = "The AWS region to deploy resources"
+variable "management_account_region" {
+  description = "AWS region for the management account"
   type        = string
   default     = "us-east-1"
 }
 
-variable "account_ids" {
-  description = "List of AWS account IDs for the multi-account setup"
-  type        = list(string)
-}
-
-variable "organization_unit" {
-  description = "The name of the organization unit for Control Tower"
+variable "management_account_profile" {
+  description = "AWS CLI profile for the management account"
   type        = string
 }
 
-variable "iam_roles" {
-  description = "List of IAM roles to create"
-  type        = list(string)
+variable "management_bucket_name" {
+  description = "S3 bucket name for the management account"
+  type        = string
 }
 
-variable "resource_tags" {
-  description = "Tags to apply to all resources"
-  type        = map(string)
+variable "dev_account_region" {
+  description = "AWS region for the dev account"
+  type        = string
+  default     = "us-west-1"
+}
+
+variable "dev_account_profile" {
+  description = "AWS CLI profile for the dev account"
+  type        = string
+}
+
+variable "dev_bucket_name" {
+  description = "S3 bucket name for the dev account"
+  type        = string
+}
+
+variable "prod_account_region" {
+  description = "AWS region for the prod account"
+  type        = string
+  default     = "us-west-2"
+}
+
+variable "prod_account_profile" {
+  description = "AWS CLI profile for the prod account"
+  type        = string
+}
+
+variable "prod_bucket_name" {
+  description = "S3 bucket name for the prod account"
+  type        = string
 }
 ```
 
 ---
 
-#### `# FILE: outputs.tf`
+#### # FILE: outputs.tf
 ```hcl

@@ -1,29 +1,44 @@
-module "iam" {
-  source = "./modules/iam"
+provider "aws" {
+  alias  = "management"
+  region = var.management_account_region
+  profile = var.management_account_profile
 }
 
-module "aws_resources" {
-  source = "./modules/aws_resources"
+provider "aws" {
+  alias  = "dev"
+  region = var.dev_account_region
+  profile = var.dev_account_profile
 }
 
-module "control_tower" {
-  source = "./modules/control_tower"
+provider "aws" {
+  alias  = "prod"
+  region = var.prod_account_region
+  profile = var.prod_account_profile
 }
 
-output "iam_outputs" {
-  value = module.iam
+# Example: S3 bucket in the management account
+resource "aws_s3_bucket" "management_bucket" {
+  provider = aws.management
+  bucket   = var.management_bucket_name
+  acl      = "private"
 }
 
-output "aws_resources_outputs" {
-  value = module.aws_resources
+# Example: S3 bucket in the dev account
+resource "aws_s3_bucket" "dev_bucket" {
+  provider = aws.dev
+  bucket   = var.dev_bucket_name
+  acl      = "private"
 }
 
-output "control_tower_outputs" {
-  value = module.control_tower
+# Example: S3 bucket in the prod account
+resource "aws_s3_bucket" "prod_bucket" {
+  provider = aws.prod
+  bucket   = var.prod_bucket_name
+  acl      = "private"
 }
 ```
 
 ---
 
-#### `# FILE: variables.tf`
+#### # FILE: variables.tf
 ```hcl

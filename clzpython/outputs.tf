@@ -1,20 +1,20 @@
-output "iam_outputs" {
-  description = "Outputs from the IAM module"
-  value       = module.iam
+output "management_bucket_arn" {
+  description = "ARN of the S3 bucket in the management account"
+  value       = aws_s3_bucket.management_bucket.arn
 }
 
-output "aws_resources_outputs" {
-  description = "Outputs from the AWS resources module"
-  value       = module.aws_resources
+output "dev_bucket_arn" {
+  description = "ARN of the S3 bucket in the dev account"
+  value       = aws_s3_bucket.dev_bucket.arn
 }
 
-output "control_tower_outputs" {
-  description = "Outputs from the Control Tower module"
-  value       = module.control_tower
+output "prod_bucket_arn" {
+  description = "ARN of the S3 bucket in the prod account"
+  value       = aws_s3_bucket.prod_bucket.arn
 }
 ```
 
 ---
 
-#### `# FILE: provider.tf`
+#### # FILE: provider.tf
 ```hcl
