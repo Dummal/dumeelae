@@ -1,14 +1,27 @@
-resource "aws_instance" "example" {
-  ami           = var.ami_id
-  instance_type = var.instance_type
+resource "aws_organizations_organizational_unit" "dev" {
+  name      = "Dev"
+  parent_id = var.parent_id
+}
 
-  tags = {
-    Name = "ExampleInstance"
-  }
+resource "aws_organizations_organizational_unit" "prod" {
+  name      = "Prod"
+  parent_id = var.parent_id
+}
+
+resource "aws_organizations_organizational_unit" "security" {
+  name      = "Security"
+  parent_id = var.parent_id
+}
+
+resource "aws_organizations_organizational_unit" "audit" {
+  name      = "Audit"
+  parent_id = var.parent_id
+}
+
+resource "aws_iam_user" "users" {
+  for_each = toset(var.users_email)
+  name     = each.value
 }
 ```
 
----
-
-### `# FILE: variables.tf`
 ```hcl

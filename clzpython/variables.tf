@@ -1,16 +1,22 @@
-variable "ami_id" {
-  description = "The AMI ID to use for the instance"
+variable "organization_name" {
   type        = string
+  description = "The name of the AWS organization."
 }
 
-variable "instance_type" {
-  description = "The type of instance to use"
+variable "parent_id" {
   type        = string
-  default     = "t2.micro"
+  description = "The ID of the parent organizational unit."
+}
+
+variable "users_email" {
+  type        = list(string)
+  description = "A list of email addresses for IAM users."
+}
+
+variable "aws_region" {
+  type        = string
+  description = "The AWS region to deploy resources in."
 }
 ```
 
----
-
-### `# FILE: outputs.tf`
 ```hcl

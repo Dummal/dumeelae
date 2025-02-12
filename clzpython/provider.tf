@@ -3,7 +3,4 @@ provider "aws" {
 }
 ```
 
----
-
-### `# FILE: terraform.tfvars`
 ```hcl
