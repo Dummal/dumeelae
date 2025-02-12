@@ -5,5 +5,5 @@ provider "aws" {
 
 ---
 
-### `terraform.tfvars`
+### `# FILE: terraform.tfvars`
 ```hcl
