@@ -26,15 +26,21 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
+// Variable for the account alias
+variable "account_alias" {
+  description = "The alias for the AWS account."
+  type        = string
+}
+
 // Variable for the IAM role name
 variable "iam_role_name" {
   description = "The name of the IAM role to be created or managed."
   type        = string
 }
 
-// Variable for the account alias
-variable "account_alias" {
-  description = "The alias to assign to the AWS account."
+// Variable for the policy ARN to attach to the IAM role
+variable "policy_arn" {
+  description = "The ARN of the policy to attach to the IAM role."
   type        = string
 }
 
