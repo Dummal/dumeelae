@@ -51,32 +51,36 @@ resource "aws_iam_group_membership" "marketing_membership" {
 
 resource "aws_iam_policy" "engineering_policy" {
   name        = "EngineeringPolicy"
-  description = "Policy for Engineering group"
-  policy      = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action   = "s3:*"
-        Effect   = "Allow"
-        Resource = "*"
-      }
-    ]
-  })
+  description = "Policy for the Engineering group"
+  policy      = <<EOT
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "s3:*",
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOT
 }
 
 resource "aws_iam_policy" "marketing_policy" {
   name        = "MarketingPolicy"
-  description = "Policy for Marketing group"
-  policy      = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action   = "dynamodb:*"
-        Effect   = "Allow"
-        Resource = "*"
-      }
-    ]
-  })
+  description = "Policy for the Marketing group"
+  policy      = <<EOT
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "dynamodb:*",
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOT
 }
 
 resource "aws_iam_group_policy_attachment" "engineering_policy_attachment" {
