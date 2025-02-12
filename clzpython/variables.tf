@@ -10,7 +10,7 @@ variable "instance_type" {
 }
 
 variable "instance_name" {
-  description = "The name tag for the instance"
+  description = "The name of the instance"
   type        = string
 }
 ```

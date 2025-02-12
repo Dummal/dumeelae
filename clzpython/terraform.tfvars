@@ -1,7 +1,7 @@
-ami_id         = "ami-12345678"
+ami_id         = "ami-0c55b159cbfafe1f0"
 instance_type  = "t2.micro"
 instance_name  = "example-instance"
-aws_region     = "us-west-2"
+aws_region     = "us-east-1"
 ```
 
 ---
