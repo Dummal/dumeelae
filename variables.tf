@@ -26,26 +26,25 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
-// Variable for the IAM role name
-variable "iam_role_name" {
-  description = "The name of the IAM role to be created or managed."
-  type        = string
-}
-
 // Variable for the account alias
 variable "account_alias" {
   description = "The alias to assign to the AWS account."
   type        = string
 }
 
-// Variable for the billing alert threshold
-variable "billing_alert_threshold" {
-  description = "The threshold amount (in USD) for billing alerts."
-  type        = number
-  default     = 100.0
+// Variable for the IAM role name
+variable "iam_role_name" {
+  description = "The name of the IAM role to be created or managed."
+  type        = string
 }
 
-// Variable for tags to be applied to resources
+// Variable for the policy ARN to attach to the IAM role
+variable "policy_arn" {
+  description = "The ARN of the policy to attach to the IAM role."
+  type        = string
+}
+
+// Variable for the tags to apply to resources
 variable "tags" {
   description = "A map of tags to apply to the resources."
   type        = map(string)
