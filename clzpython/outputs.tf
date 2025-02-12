@@ -11,5 +11,5 @@ output "instance_public_ip" {
 
 ---
 
-### `# FILE: provider.tf`
+### `provider.tf`
 ```hcl

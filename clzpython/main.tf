@@ -3,12 +3,12 @@ resource "aws_instance" "example" {
   instance_type = var.instance_type
 
   tags = {
-    Name = "ExampleInstance"
+    Name = var.instance_name
   }
 }
 ```
 
 ---
 
-### `# FILE: variables.tf`
+### `variables.tf`
 ```hcl
