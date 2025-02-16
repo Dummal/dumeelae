@@ -13,10 +13,10 @@ module "iam" {
 }
 
 module "aws_resources" {
-  source                 = "./modules/aws_resources"
-  aft_logs_bucket_name   = var.aft_logs_bucket_name
-  aws_region             = var.aws_region
-  master_account_id      = var.master_account_id
+  source                = "./modules/aws_resources"
+  aft_logs_bucket_name  = var.aft_logs_bucket_name
+  aws_region            = var.aws_region
+  master_account_id     = var.master_account_id
 }
 
 module "vpc" {
@@ -50,7 +50,7 @@ resource "aws_s3_bucket" "aft_logs" {
     }
   }
 
-  public_access_block {
+  block_public_access {
     block_public_acls       = true
     block_public_policy     = true
     ignore_public_acls      = true
@@ -95,7 +95,7 @@ resource "aws_dynamodb_table" "aft_requests" {
 }
 
 resource "aws_sns_topic" "aft_notifications" {
-  name            = "aft-notifications"
+  name              = "aft-notifications"
   kms_master_key_id = aws_kms_key.aft_logs_key.arn
 }
 
