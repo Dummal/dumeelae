@@ -29,13 +29,22 @@ module "vpc" {
 }
 
 resource "aws_organizations_account" "accounts" {
-  name   = var.organization_name
-  email  = var.users_email
-  parent_id = var.parent_id
+  for_each = {
+    "dev"      = var.dev_account_email
+    "prod"     = var.prod_account_email
+    "shared"   = var.shared_account_email
+    "security" = var.security_account_email
+    "audit"    = var.audit_account_email
+  }
+
+  email      = each.value
+  name       = "${var.organization_name}-${each.key}"
+  parent_id  = var.parent_id
+  role_name  = "OrganizationAccountAccessRole"
 }
 
 resource "aws_s3_bucket" "aft_logs" {
-  bucket = "aft-logs-bucket-863518414447"
+  bucket = var.aft_logs_bucket_name
 
   versioning {
     enabled = true
@@ -44,13 +53,13 @@ resource "aws_s3_bucket" "aft_logs" {
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        sse_algorithm     = "aws:kms"
         kms_master_key_id = aws_kms_key.aft_logs_key.arn
+        sse_algorithm     = "aws:kms"
       }
     }
   }
 
-  block_public_access {
+  public_access_block {
     block_public_acls       = true
     block_public_policy     = true
     ignore_public_acls      = true
@@ -61,7 +70,9 @@ resource "aws_s3_bucket" "aft_logs" {
 resource "aws_kms_key" "aft_logs_key" {
   description             = "KMS key for AFT logs encryption"
   enable_key_rotation     = true
-  policy                  = jsonencode({
+  deletion_window_in_days = 30
+
+  policy = jsonencode({
     Statement = [
       {
         Effect    = "Allow"
@@ -69,6 +80,14 @@ resource "aws_kms_key" "aft_logs_key" {
           AWS = "arn:aws:iam::${var.master_account_id}:root"
         }
         Action    = "kms:*"
+        Resource  = "*"
+      },
+      {
+        Effect    = "Allow"
+        Principal = {
+          Service = "logs.${var.aws_region}.amazonaws.com"
+        }
+        Action    = "kms:Encrypt"
         Resource  = "*"
       }
     ]

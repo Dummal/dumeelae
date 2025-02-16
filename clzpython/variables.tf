@@ -6,12 +6,12 @@ variable "organization_name" {
 
 variable "parent_id" {
   type        = string
-  description = "The parent ID for the organizational unit."
+  description = "The parent ID for the organizational units."
 }
 
 variable "users_email" {
-  type        = string
-  description = "The email address for the AWS account user."
+  type        = map(string)
+  description = "A map of user emails for AWS accounts (e.g., dev, prod, shared, security, audit)."
 }
 
 variable "enable_control_tower" {
@@ -26,7 +26,7 @@ variable "master_account_email" {
 
 variable "organizational_units" {
   type        = list(string)
-  description = "List of organizational units to be created."
+  description = "A list of organizational units to be created."
 }
 
 variable "aws_region" {
@@ -46,27 +46,52 @@ variable "aft_logs_bucket_name" {
 
 variable "public_vpc_cidr" {
   type        = string
-  description = "CIDR block for the public VPC."
+  description = "The CIDR block for the public VPC."
 }
 
 variable "public_subnet_cidr" {
   type        = string
-  description = "CIDR block for the public subnet."
+  description = "The CIDR block for the public subnet."
 }
 
 variable "private_vpc_cidr" {
   type        = string
-  description = "CIDR block for the private VPC."
+  description = "The CIDR block for the private VPC."
 }
 
 variable "private_subnet_cidr" {
   type        = string
-  description = "CIDR block for the private subnet."
+  description = "The CIDR block for the private subnet."
 }
 
 variable "aws_availability_zone" {
   type        = string
   description = "The AWS availability zone for the VPC."
+}
+
+variable "dev_account_email" {
+  type        = string
+  description = "The email address for the Dev account."
+}
+
+variable "prod_account_email" {
+  type        = string
+  description = "The email address for the Prod account."
+}
+
+variable "shared_account_email" {
+  type        = string
+  description = "The email address for the Shared account."
+}
+
+variable "security_account_email" {
+  type        = string
+  description = "The email address for the Security account."
+}
+
+variable "audit_account_email" {
+  type        = string
+  description = "The email address for the Audit account."
 }
 ```
 
