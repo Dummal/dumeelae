@@ -6,7 +6,7 @@ variable "organization_name" {
 
 variable "parent_id" {
   type        = string
-  description = "The parent ID for the organizational units."
+  description = "The ID of the parent organizational unit."
 }
 
 variable "users_email" {
