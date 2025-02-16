@@ -46,22 +46,22 @@ variable "aft_logs_bucket_name" {
 
 variable "public_vpc_cidr" {
   type        = string
-  description = "The CIDR block for the public VPC."
+  description = "CIDR block for the public VPC."
 }
 
 variable "public_subnet_cidr" {
   type        = string
-  description = "The CIDR block for the public subnet."
+  description = "CIDR block for the public subnet."
 }
 
 variable "private_vpc_cidr" {
   type        = string
-  description = "The CIDR block for the private VPC."
+  description = "CIDR block for the private VPC."
 }
 
 variable "private_subnet_cidr" {
   type        = string
-  description = "The CIDR block for the private subnet."
+  description = "CIDR block for the private subnet."
 }
 
 variable "aws_availability_zone" {

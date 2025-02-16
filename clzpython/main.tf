@@ -13,19 +13,19 @@ module "iam" {
 }
 
 module "aws_resources" {
-  source                = "./modules/aws_resources"
-  aft_logs_bucket_name  = var.aft_logs_bucket_name
-  aws_region            = var.aws_region
-  master_account_id     = var.master_account_id
+  source                 = "./modules/aws_resources"
+  aft_logs_bucket_name   = var.aft_logs_bucket_name
+  aws_region             = var.aws_region
+  master_account_id      = var.master_account_id
 }
 
 module "vpc" {
-  source                 = "./modules/vpc"
-  public_vpc_cidr        = var.public_vpc_cidr
-  public_subnet_cidr     = var.public_subnet_cidr
-  private_vpc_cidr       = var.private_vpc_cidr
-  private_subnet_cidr    = var.private_subnet_cidr
-  aws_availability_zone  = var.aws_availability_zone
+  source                  = "./modules/vpc"
+  public_vpc_cidr         = var.public_vpc_cidr
+  public_subnet_cidr      = var.public_subnet_cidr
+  private_vpc_cidr        = var.private_vpc_cidr
+  private_subnet_cidr     = var.private_subnet_cidr
+  aws_availability_zone   = var.aws_availability_zone
 }
 
 resource "aws_organizations_account" "accounts" {
@@ -44,13 +44,13 @@ resource "aws_s3_bucket" "aft_logs" {
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        kms_master_key_id = aws_kms_key.aft_logs_key.arn
         sse_algorithm     = "aws:kms"
+        kms_master_key_id = aws_kms_key.aft_logs_key.arn
       }
     }
   }
 
-  public_access_block_configuration {
+  public_access_block {
     block_public_acls       = true
     block_public_policy     = true
     ignore_public_acls      = true
@@ -62,14 +62,13 @@ resource "aws_kms_key" "aft_logs_key" {
   description             = "KMS key for AFT logs encryption"
   enable_key_rotation     = true
   policy                  = jsonencode({
-    Version   = "2012-10-17",
     Statement = [
       {
-        Effect    = "Allow",
+        Effect    = "Allow"
         Principal = {
           AWS = "arn:aws:iam::${var.master_account_id}:root"
-        },
-        Action    = "kms:*",
+        }
+        Action    = "kms:*"
         Resource  = "*"
       }
     ]
