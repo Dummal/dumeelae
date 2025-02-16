@@ -36,7 +36,7 @@ variable "aws_region" {
 
 variable "master_account_id" {
   type        = string
-  description = "The ID of the master account."
+  description = "The AWS account ID of the master account."
 }
 
 variable "aft_logs_bucket_name" {
