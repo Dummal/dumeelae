@@ -20,12 +20,12 @@ module "aws_resources" {
 }
 
 module "vpc" {
-  source                  = "./modules/vpc"
-  public_vpc_cidr         = var.public_vpc_cidr
-  public_subnet_cidr      = var.public_subnet_cidr
-  private_vpc_cidr        = var.private_vpc_cidr
-  private_subnet_cidr     = var.private_subnet_cidr
-  aws_availability_zone   = var.aws_availability_zone
+  source                 = "./modules/vpc"
+  public_vpc_cidr        = var.public_vpc_cidr
+  public_subnet_cidr     = var.public_subnet_cidr
+  private_vpc_cidr       = var.private_vpc_cidr
+  private_subnet_cidr    = var.private_subnet_cidr
+  aws_availability_zone  = var.aws_availability_zone
 }
 
 resource "aws_organizations_account" "accounts" {
@@ -61,7 +61,9 @@ resource "aws_s3_bucket" "aft_logs" {
 resource "aws_kms_key" "aft_logs_key" {
   description             = "KMS key for AFT logs encryption"
   enable_key_rotation     = true
-  policy                  = jsonencode({
+  deletion_window_in_days = 30
+
+  policy = jsonencode({
     Statement = [
       {
         Effect    = "Allow"
@@ -69,6 +71,14 @@ resource "aws_kms_key" "aft_logs_key" {
           AWS = "arn:aws:iam::${var.master_account_id}:root"
         }
         Action    = "kms:*"
+        Resource  = "*"
+      },
+      {
+        Effect    = "Allow"
+        Principal = {
+          Service = "logs.${var.aws_region}.amazonaws.com"
+        }
+        Action    = "kms:Encrypt"
         Resource  = "*"
       }
     ]
@@ -95,7 +105,7 @@ resource "aws_dynamodb_table" "aft_requests" {
 }
 
 resource "aws_sns_topic" "aft_notifications" {
-  name              = "aft-notifications"
+  name            = "aft-notifications"
   kms_master_key_id = aws_kms_key.aft_logs_key.arn
 }
 
