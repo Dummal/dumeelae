@@ -1,27 +1,32 @@
-resource "aws_organizations_organizational_unit" "dev" {
-  name      = "Dev"
-  parent_id = var.parent_id
+```hcl
+module "control_tower" {
+  source                = "./modules/control_tower"
+  enable_control_tower  = var.enable_control_tower
+  master_account_email  = var.master_account_email
+  organizational_units  = var.organizational_units
+  aws_region            = var.aws_region
 }
 
-resource "aws_organizations_organizational_unit" "prod" {
-  name      = "Prod"
-  parent_id = var.parent_id
+module "iam" {
+  source             = "./modules/iam"
+  master_account_id  = var.master_account_id
 }
 
-resource "aws_organizations_organizational_unit" "security" {
-  name      = "Security"
-  parent_id = var.parent_id
+module "aws_resources" {
+  source                = "./modules/aws_resources"
+  aft_logs_bucket_name  = var.aft_logs_bucket_name
+  aws_region            = var.aws_region
+  master_account_id     = var.master_account_id
 }
 
-resource "aws_organizations_organizational_unit" "audit" {
-  name      = "Audit"
-  parent_id = var.parent_id
-}
-
-resource "aws_iam_user" "user" {
-  for_each = toset(var.users_email)
-  name     = each.value
+module "vpc" {
+  source                  = "./modules/vpc"
+  public_vpc_cidr         = var.public_vpc_cidr
+  public_subnet_cidr      = var.public_subnet_cidr
+  private_vpc_cidr        = var.private_vpc_cidr
+  private_subnet_cidr     = var.private_subnet_cidr
+  aws_availability_zone   = var.aws_availability_zone
 }
 ```
 
-```hcl
+---
