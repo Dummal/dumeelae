@@ -13,10 +13,10 @@ module "iam" {
 }
 
 module "aws_resources" {
-  source                = "./modules/aws_resources"
-  aft_logs_bucket_name  = var.aft_logs_bucket_name
-  aws_region            = var.aws_region
-  master_account_id     = var.master_account_id
+  source                 = "./modules/aws_resources"
+  aft_logs_bucket_name   = var.aft_logs_bucket_name
+  aws_region             = var.aws_region
+  master_account_id      = var.master_account_id
 }
 
 module "vpc" {
@@ -26,6 +26,72 @@ module "vpc" {
   private_vpc_cidr        = var.private_vpc_cidr
   private_subnet_cidr     = var.private_subnet_cidr
   aws_availability_zone   = var.aws_availability_zone
+}
+
+resource "aws_organizations_account" "accounts" {
+  name   = var.organization_name
+  email  = var.users_email
+  parent_id = var.parent_id
+}
+
+resource "aws_s3_bucket" "aft_logs" {
+  bucket = "aft-logs-bucket-863518414447"
+
+  versioning {
+    enabled = true
+  }
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm     = "aws:kms"
+        kms_master_key_id = aws_kms_key.aft_logs_key.arn
+      }
+    }
+  }
+
+  public_access_block {
+    block_public_acls       = true
+    block_public_policy     = true
+    ignore_public_acls      = true
+    restrict_public_buckets = true
+  }
+}
+
+resource "aws_kms_key" "aft_logs_key" {
+  description             = "KMS key for AFT logs encryption"
+  enable_key_rotation     = true
+}
+
+resource "aws_dynamodb_table" "aft_requests" {
+  name           = "aft-requests"
+  billing_mode   = "PAY_PER_REQUEST"
+  hash_key       = "id"
+
+  attribute {
+    name = "id"
+    type = "S"
+  }
+
+  point_in_time_recovery {
+    enabled = true
+  }
+
+  server_side_encryption {
+    enabled     = true
+    kms_key_arn = aws_kms_key.aft_logs_key.arn
+  }
+}
+
+resource "aws_sns_topic" "aft_notifications" {
+  name            = "aft-notifications"
+  kms_master_key_id = aws_kms_key.aft_logs_key.arn
+}
+
+resource "aws_cloudwatch_log_group" "aft_logs" {
+  name              = "/aws/aft/logs"
+  retention_in_days = 90
+  kms_key_id        = aws_kms_key.aft_logs_key.arn
 }
 ```
 
