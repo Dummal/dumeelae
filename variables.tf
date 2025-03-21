@@ -1,10 +1,10 @@
 variable "master_account_id" {
-  description = "The ID of the master AWS account."
+  description = "The AWS account ID of the master account."
   type        = string
 }
 
 variable "enable_control_tower" {
-  description = "Boolean to enable AWS Control Tower setup."
+  description = "Flag to enable AWS Control Tower."
   type        = bool
 }
 
@@ -14,8 +14,8 @@ variable "master_account_email" {
 }
 
 variable "organizational_units" {
-  description = "List of organizational units to be created."
-  type        = map(string)
+  description = "List of organizational units (OUs) to create in the landing zone."
+  type        = list(string)
 }
 
 variable "aws_region" {
@@ -29,32 +29,32 @@ variable "aft_logs_bucket_name" {
 }
 
 variable "public_vpc_cidr" {
-  description = "CIDR block for the public VPC."
+  description = "CIDR block for public VPC."
   type        = string
 }
 
 variable "public_subnet_cidr" {
-  description = "CIDR block for the public subnet."
+  description = "CIDR block for public subnets."
   type        = string
 }
 
 variable "private_vpc_cidr" {
-  description = "CIDR block for the private VPC."
+  description = "CIDR block for private VPC."
   type        = string
 }
 
 variable "private_subnet_cidr" {
-  description = "CIDR block for the private subnet."
+  description = "CIDR block for private subnets."
   type        = string
 }
 
 variable "aws_availability_zone" {
-  description = "AWS availability zone for resources."
+  description = "Availability zone for the VPC."
   type        = string
 }
 
 variable "vpc_id" {
-  description = "ID of the VPC."
+  description = "ID of the VPC to associate subnets."
   type        = string
 }
 
@@ -69,11 +69,16 @@ variable "availability_zone" {
 }
 
 variable "map_public_ip_on_launch" {
-  description = "Boolean to map public IPs on resource launch."
+  description = "Flag to map public IPs on launch for public subnets."
   type        = bool
 }
 
 variable "tags" {
-  description = "Tags to be applied to the resources."
+  description = "Tags to apply to resources."
   type        = map(string)
+}
+
+variable "development_account_email" {
+  description = "Email address for the development account."
+  type        = string
 }

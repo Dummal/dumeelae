@@ -1,10 +1,10 @@
 output "iam_role_arn" {
-  description = "ARN of the IAM role created by the IAM module."
+  description = "ARN of the IAM role created."
   value       = module.iam.role_arn
 }
 
 output "control_tower_status" {
-  description = "Status of the AWS Control Tower setup."
+  description = "Status of AWS Control Tower setup."
   value       = module.control_tower.status
 }
 
@@ -19,6 +19,6 @@ output "vpc_id" {
 }
 
 output "subnet_ids" {
-  description = "List of subnet IDs created."
+  description = "IDs of subnets created."
   value       = module.subnet.subnet_ids
 }

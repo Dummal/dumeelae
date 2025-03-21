@@ -1,24 +1,29 @@
-output "control_tower_role_arn" {
-  description = "The ARN of the Control Tower IAM role"
-  value       = aws_iam_role.control_tower_role.arn
+output "account_id" {
+  description = "The ID of the newly created AWS account."
+  value       = aws_organizations_account.new_account.id
 }
 
-output "control_tower_policy_arn" {
-  description = "The ARN of the Control Tower IAM policy"
-  value       = aws_iam_policy.control_tower_policy.arn
+output "cross_account_role_arn" {
+  description = "The ARN of the cross-account IAM role."
+  value       = aws_iam_role.cross_account_role.arn
 }
 
-output "allowed_regions" {
-  description = "List of allowed AWS regions"
-  value       = var.allowed_regions
+output "vpn_connection_id" {
+  description = "The ID of the VPN connection."
+  value       = aws_vpn_connection.vpn.id
 }
 
-output "data_residency" {
-  description = "Data residency requirement"
-  value       = var.data_residency
+output "route53_zone_id" {
+  description = "The ID of the Route 53 hosted zone."
+  value       = aws_route53_zone.dns_zone.zone_id
 }
 
-output "compliance_frameworks" {
-  description = "Compliance frameworks enforced"
-  value       = var.compliance_frameworks
+output "sns_topic_arn" {
+  description = "The ARN of the SNS topic for alerts."
+  value       = aws_sns_topic.alerts.arn
+}
+
+output "secretsmanager_arn" {
+  description = "The ARN of the Secrets Manager secret."
+  value       = aws_secretsmanager_secret.secrets.arn
 }

@@ -1,95 +1,71 @@
-terraform {
-  required_version = ">= 1.5.0"
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 4.0"
-    }
-  }
-}
-
 provider "aws" {
   region = var.aws_region
 }
 
-module "control_tower" {
-  source = "./modules/control_tower"
+resource "aws_organizations_account" "new_account" {
+  name             = "ti-${var.environment}-new-account"
+  email            = var.account_email
+  role_name        = var.organization_role_name
+  iam_user_access_to_billing = "DENY"
 
-  prefix                      = var.prefix
-  environment                 = var.environment
-  allowed_regions             = var.allowed_regions
-  data_residency              = var.data_residency
-  compliance_frameworks       = var.compliance_frameworks
-  enable_custom_guardrails    = var.enable_custom_guardrails
-  vpn_connection              = var.vpn_connection
-  siem_integration            = var.siem_integration
-  patch_management            = var.patch_management
-  data_retention_policy       = var.data_retention_policy
-  resource_quotas_management  = var.resource_quotas_management
-  infrastructure_compliance   = var.infrastructure_compliance
-  software_licensing          = var.software_licensing
-  secrets_management          = var.secrets_management
-  dns_management              = var.dns_management
-  resource_tagging            = var.resource_tagging
-  data_lifecycle_management   = var.data_lifecycle_management
-  aws_sns_alerts              = var.aws_sns_alerts
-  data_encryption             = var.data_encryption
+  tags = var.common_tags
 }
 
-resource "aws_iam_role" "control_tower_role" {
-  name               = "${var.prefix}-${var.environment}-control-tower-role"
-  assume_role_policy = data.aws_iam_policy_document.control_tower_assume_role_policy.json
+resource "aws_iam_role" "cross_account_role" {
+  name               = "ti-${var.environment}-cross-account-role"
+  assume_role_policy = data.aws_iam_policy_document.cross_account_assume_role_policy.json
 
-  tags = var.tags
+  tags = var.common_tags
 }
 
-resource "aws_iam_policy" "control_tower_policy" {
-  name        = "${var.prefix}-${var.environment}-control-tower-policy"
-  description = "Policy for Control Tower service actions"
+resource "aws_iam_policy" "compliance_monitoring_policy" {
+  name        = "ti-${var.environment}-compliance-monitoring-policy"
+  description = "Policy for AWS Config and Security Hub monitoring compliance."
 
-  policy = data.aws_iam_policy_document.control_tower_policy.json
+  policy = data.aws_iam_policy_document.compliance_policy.json
 
-  tags = var.tags
+  tags = var.common_tags
 }
 
-resource "aws_iam_role_policy_attachment" "control_tower_attachment" {
-  role       = aws_iam_role.control_tower_role.name
-  policy_arn = aws_iam_policy.control_tower_policy.arn
-}
+resource "aws_config_configuration_recorder" "recorder" {
+  name     = "ti-${var.environment}-config-recorder"
+  role_arn = aws_iam_role.cross_account_role.arn
 
-data "aws_iam_policy_document" "control_tower_assume_role_policy" {
-  statement {
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "Service"
-      identifiers = ["controltower.amazonaws.com"]
-    }
+  recording_group {
+    all_supported = true
+    include_global_resource_types = true
   }
 }
 
-data "aws_iam_policy_document" "control_tower_policy" {
-  statement {
-    actions = [
-      "organizations:CreateAccount",
-      "organizations:DescribeCreateAccountStatus",
-      "iam:CreateRole",
-      "iam:AttachRolePolicy",
-      "organizations:EnableAWSServiceAccess",
-      "organizations:ListAccounts",
-      "organizations:ListAWSServiceAccessForOrganization"
-    ]
+resource "aws_config_delivery_channel" "delivery_channel" {
+  name           = "ti-${var.environment}-delivery-channel"
+  s3_bucket_name = var.config_s3_bucket
 
-    resources = ["*"]
-  }
+  sns_topic_arn = aws_sns_topic.alerts.arn
 }
 
-output "control_tower_role_arn" {
-  description = "The ARN of the Control Tower IAM role"
-  value       = aws_iam_role.control_tower_role.arn
+resource "aws_secretsmanager_secret" "secrets" {
+  name = "ti-${var.environment}-secrets"
+
+  tags = var.common_tags
 }
 
-output "control_tower_policy_arn" {
-  description = "The ARN of the Control Tower IAM policy"
-  value       = aws_iam_policy.control_tower_policy.arn
+resource "aws_sns_topic" "alerts" {
+  name = "ti-${var.environment}-alerts"
+
+  tags = var.common_tags
+}
+
+resource "aws_vpn_connection" "vpn" {
+  customer_gateway_id = var.customer_gateway_id
+  type                = "ipsec.1"
+  static_routes_only  = true
+
+  tags = var.common_tags
+}
+
+resource "aws_route53_zone" "dns_zone" {
+  name = var.domain_name
+
+  tags = var.common_tags
 }

@@ -1,39 +1,39 @@
 output "control_tower_admin_role_arn" {
-  description = "ARN of the Control Tower Admin Role"
+  description = "ARN of the Control Tower Admin IAM Role"
   value       = aws_iam_role.control_tower_admin_role.arn
 }
 
 output "aft_execution_role_arn" {
-  description = "ARN of the AFT Execution Role"
+  description = "ARN of the AFT Execution IAM Role"
   value       = aws_iam_role.aft_execution_role.arn
 }
 
-output "aft_account_provisioning_role_arn" {
-  description = "ARN of the AFT Account Provisioning Role"
-  value       = aws_iam_role.aft_account_provisioning_role.arn
+output "aft_provisioning_role_arn" {
+  description = "ARN of the AFT Provisioning IAM Role"
+  value       = aws_iam_role.aft_provisioning_role.arn
 }
 
 output "aft_admin_role_arn" {
-  description = "ARN of the AFT Admin Role"
+  description = "ARN of the AFT Admin IAM Role"
   value       = aws_iam_role.aft_admin_role.arn
 }
 
-output "control_tower_admin_role_name" {
-  description = "Name of the Control Tower Admin Role"
-  value       = aws_iam_role.control_tower_admin_role.name
+output "control_tower_admin_policy_arn" {
+  description = "ARN of the Control Tower Admin Policy"
+  value       = aws_iam_policy.control_tower_admin_policy.arn
 }
 
-output "aft_execution_role_name" {
-  description = "Name of the AFT Execution Role"
-  value       = aws_iam_role.aft_execution_role.name
+output "aft_execution_policy_arn" {
+  description = "ARN of the AFT Execution Policy"
+  value       = aws_iam_policy.aft_execution_policy.arn
 }
 
-output "aft_account_provisioning_role_name" {
-  description = "Name of the AFT Account Provisioning Role"
-  value       = aws_iam_role.aft_account_provisioning_role.name
+output "aft_provisioning_policy_arn" {
+  description = "ARN of the AFT Provisioning Policy"
+  value       = aws_iam_policy.aft_provisioning_policy.arn
 }
 
-output "aft_admin_role_name" {
-  description = "Name of the AFT Admin Role"
-  value       = aws_iam_role.aft_admin_role.name
+output "aft_admin_policy_arn" {
+  description = "ARN of the AFT Admin Policy"
+  value       = aws_iam_policy.aft_admin_policy.arn
 }

@@ -15,19 +15,19 @@ resource "aws_internet_gateway" "main" {
 }
 
 resource "aws_subnet" "public" {
-  count                   = length(var.public_subnets)
-  vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.public_subnets[count.index]
-  availability_zone       = element(var.availability_zones, count.index)
+  count             = length(var.public_subnets)
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.public_subnets[count.index]
+  availability_zone = var.availability_zones[count.index]
   map_public_ip_on_launch = true
-  tags                    = var.tags
+  tags              = var.tags
 }
 
 resource "aws_subnet" "private" {
   count             = length(var.private_subnets)
   vpc_id            = aws_vpc.main.id
   cidr_block        = var.private_subnets[count.index]
-  availability_zone = element(var.availability_zones, count.index)
+  availability_zone = var.availability_zones[count.index]
   tags              = var.tags
 }
 
@@ -49,14 +49,15 @@ resource "aws_route_table_association" "public" {
 }
 
 resource "aws_nat_gateway" "main" {
-  count         = var.enable_nat_gateway ? 1 : 0
-  allocation_id = aws_eip.nat.id
+  count         = var.enable_nat_gateway ? length(var.private_subnets) : 0
+  allocation_id = aws_eip.nat[count.index].id
   subnet_id     = aws_subnet.public[0].id
   tags          = var.tags
 }
 
 resource "aws_eip" "nat" {
-  count = var.enable_nat_gateway ? 1 : 0
+  count = var.enable_nat_gateway ? length(var.private_subnets) : 0
+  vpc   = true
   tags  = var.tags
 }
 
@@ -67,10 +68,10 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route" "private" {
-  count                  = length(var.private_subnets)
+  count                  = var.enable_nat_gateway ? length(var.private_subnets) : 0
   route_table_id         = aws_route_table.private[count.index].id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.main.id
+  nat_gateway_id         = aws_nat_gateway.main[count.index].id
 }
 
 resource "aws_route_table_association" "private" {
@@ -85,33 +86,8 @@ resource "aws_vpc_endpoint" "s3" {
   tags         = var.tags
 }
 
-resource "aws_security_group" "main" {
-  vpc_id = aws_vpc.main.id
-  tags   = var.tags
-
-  ingress {
-    description = "Allow all inbound traffic"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    description = "Allow all outbound traffic"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-resource "aws_flow_log" "main" {
-  log_destination_type = "s3"
-  log_group_name       = "vpc-flow-logs"
-  resource_id          = aws_vpc.main.id
-  traffic_type         = "ALL"
-  destination_options {
-    file_format = "plain-text"
-  }
+resource "aws_flow_log" "vpc" {
+  vpc_id          = aws_vpc.main.id
+  log_destination = "arn:aws:s3:::${var.s3_bucket_name}"
+  traffic_type    = "ALL"
 }

@@ -1,84 +1,68 @@
 variable "region" {
-  description = "AWS region where resources will be created"
+  description = "AWS region for the resources"
   type        = string
   default     = "us-east-2"
 }
 
 variable "master_account_id" {
-  description = "Master AWS Account ID"
+  description = "AWS master account ID"
   type        = string
   default     = "123456789631"
 }
 
 variable "control_tower_admin_role_name" {
-  description = "Name for Control Tower Admin Role"
+  description = "Name of the Control Tower Admin IAM Role"
   type        = string
   default     = "ControlTowerAdminRole"
 }
 
 variable "aft_execution_role_name" {
-  description = "Name for AFT Execution Role"
+  description = "Name of the AFT Execution IAM Role"
   type        = string
   default     = "AFTExecutionRole"
 }
 
-variable "aft_account_provisioning_role_name" {
-  description = "Name for AFT Account Provisioning Role"
+variable "aft_provisioning_role_name" {
+  description = "Name of the AFT Provisioning IAM Role"
   type        = string
-  default     = "AFTAccountProvisioningRole"
+  default     = "AFTProvisioningRole"
 }
 
 variable "aft_admin_role_name" {
-  description = "Name for AFT Admin Role"
+  description = "Name of the AFT Admin IAM Role"
   type        = string
   default     = "AFTAdminRole"
 }
 
 variable "control_tower_admin_policy_name" {
-  description = "Name for Control Tower Admin Policy"
+  description = "Name of the Control Tower Admin Policy"
   type        = string
   default     = "ControlTowerAdminPolicy"
 }
 
 variable "aft_execution_policy_name" {
-  description = "Name for AFT Execution Policy"
+  description = "Name of the AFT Execution Policy"
   type        = string
   default     = "AFTExecutionPolicy"
 }
 
-variable "aft_account_provisioning_policy_name" {
-  description = "Name for AFT Account Provisioning Policy"
+variable "aft_provisioning_policy_name" {
+  description = "Name of the AFT Provisioning Policy"
   type        = string
-  default     = "AFTAccountProvisioningPolicy"
+  default     = "AFTProvisioningPolicy"
 }
 
 variable "aft_admin_policy_name" {
-  description = "Name for AFT Admin Policy"
+  description = "Name of the AFT Admin Policy"
   type        = string
   default     = "AFTAdminPolicy"
 }
 
-variable "control_tower_admin_policy_document" {
-  description = "Path to JSON document for Control Tower Admin Policy"
-  type        = string
-}
-
-variable "aft_execution_policy_document" {
-  description = "Path to JSON document for AFT Execution Policy"
-  type        = string
-}
-
-variable "aft_account_provisioning_policy_document" {
-  description = "Path to JSON document for AFT Account Provisioning Policy"
-  type        = string
-}
-
-variable "aft_admin_policy_document" {
-  description = "Path to JSON document for AFT Admin Policy"
-  type        = string
-}
-
-variable "common_tags" {
-  description = "Tags to apply to all resources"
+variable "tags" {
+  description = "Tags to be applied to the resources"
   type        = map(string)
+  default     = {
+    "Environment" = "Development"
+    "Owner"       = "ControlTower"
+  }
 }
