@@ -12,10 +12,10 @@ module "control_tower" {
 }
 
 module "resources" {
-  source                = "./modules/resources"
-  aft_logs_bucket_name  = var.aft_logs_bucket_name
-  aws_region            = var.aws_region
-  master_account_id     = var.master_account_id
+  source                 = "./modules/resources"
+  aft_logs_bucket_name   = var.aft_logs_bucket_name
+  aws_region             = var.aws_region
+  master_account_id      = var.master_account_id
 }
 
 module "vpc" {
@@ -28,18 +28,16 @@ module "vpc" {
 }
 
 module "subnet" {
-  source                    = "./modules/subnet"
-  vpc_id                    = var.vpc_id
-  cidr_block                = var.cidr_block
-  availability_zone         = var.availability_zone
-  map_public_ip_on_launch   = var.map_public_ip_on_launch
-  tags                      = var.tags
+  source                   = "./modules/subnet"
+  vpc_id                   = var.vpc_id
+  cidr_block               = var.cidr_block
+  availability_zone        = var.availability_zone
+  map_public_ip_on_launch  = var.map_public_ip_on_launch
+  tags                     = var.tags
 }
 
 resource "aws_organizations_account" "development_account" {
-  name            = "Development Account"
-  email           = var.development_account_email
-  parent_id       = data.aws_organizations_organizational_units.development.id
-  role_name       = "OrganizationAccountAccessRole"
-  account_id      = var.master_account_id
+  name       = "Development Account"
+  email      = var.development_account_email
+  parent_id  = var.organizational_units["development"]
 }

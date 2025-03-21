@@ -1,40 +1,80 @@
 variable "aws_region" {
-  description = "AWS region where resources will be created."
+  description = "AWS region for resource deployment"
   type        = string
   default     = "eu-west-1"
 }
 
-variable "environment" {
-  description = "The environment for the resources (e.g., dev, prod)."
+variable "account_name" {
+  description = "Name of the new AWS account"
   type        = string
 }
 
 variable "account_email" {
-  description = "Email address for the new AWS account."
+  description = "Email for the new AWS account"
   type        = string
 }
 
-variable "organization_role_name" {
-  description = "Role name for the organization account."
+variable "account_role_name" {
+  description = "IAM role name for the new AWS account"
   type        = string
 }
 
-variable "config_s3_bucket" {
-  description = "S3 bucket for AWS Config delivery channel."
+variable "iam_role_name" {
+  description = "Name of the IAM role for Control Tower operations"
+  type        = string
+  default     = "ti-control-tower-role"
+}
+
+variable "policy_name" {
+  description = "Name of the IAM policy for Control Tower operations"
+  type        = string
+  default     = "ti-control-tower-policy"
+}
+
+variable "secrets_name" {
+  description = "Name of the Secrets Manager secret"
+  type        = string
+  default     = "ti-control-tower-secret"
+}
+
+variable "sns_topic_name" {
+  description = "Name of the SNS topic for alerts"
+  type        = string
+  default     = "ti-alerts-topic"
+}
+
+variable "sns_alert_email" {
+  description = "Email address for SNS alerts"
   type        = string
 }
 
-variable "customer_gateway_id" {
-  description = "ID of the customer gateway for VPN connection."
+variable "dns_domain_name" {
+  description = "Domain name for Route 53 DNS management"
   type        = string
 }
 
-variable "domain_name" {
-  description = "Domain name for Route 53 hosted zone."
+variable "retention_bucket_name" {
+  description = "Name of the S3 bucket for data retention"
   type        = string
 }
 
-variable "common_tags" {
-  description = "Common tags for all resources."
+variable "retention_transition_days" {
+  description = "Number of days before transitioning to Glacier storage"
+  type        = number
+  default     = 2555
+}
+
+variable "retention_expiration_days" {
+  description = "Number of days before data expiration"
+  type        = number
+  default     = 2555
+}
+
+variable "tags" {
+  description = "Tags to apply to resources"
   type        = map(string)
+  default     = {
+    Environment = "Production"
+    ManagedBy   = "Terraform"
+  }
 }

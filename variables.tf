@@ -1,25 +1,25 @@
 variable "master_account_id" {
-  description = "The AWS account ID of the master account."
+  description = "The AWS account ID for the master account."
   type        = string
 }
 
 variable "enable_control_tower" {
-  description = "Flag to enable AWS Control Tower."
+  description = "Enable or disable AWS Control Tower."
   type        = bool
 }
 
 variable "master_account_email" {
-  description = "Email address of the master AWS account."
+  description = "Email address associated with the master AWS account."
   type        = string
 }
 
 variable "organizational_units" {
-  description = "List of organizational units (OUs) to create in the landing zone."
-  type        = list(string)
+  description = "Organizational Units required in the landing zone."
+  type        = map(string)
 }
 
 variable "aws_region" {
-  description = "AWS region where resources will be provisioned."
+  description = "AWS region where the infrastructure will be provisioned."
   type        = string
 }
 
@@ -29,32 +29,32 @@ variable "aft_logs_bucket_name" {
 }
 
 variable "public_vpc_cidr" {
-  description = "CIDR block for public VPC."
+  description = "CIDR block for the public VPC."
   type        = string
 }
 
 variable "public_subnet_cidr" {
-  description = "CIDR block for public subnets."
+  description = "CIDR block for the public subnet."
   type        = string
 }
 
 variable "private_vpc_cidr" {
-  description = "CIDR block for private VPC."
+  description = "CIDR block for the private VPC."
   type        = string
 }
 
 variable "private_subnet_cidr" {
-  description = "CIDR block for private subnets."
+  description = "CIDR block for the private subnet."
   type        = string
 }
 
 variable "aws_availability_zone" {
-  description = "Availability zone for the VPC."
+  description = "AWS availability zone to use."
   type        = string
 }
 
 variable "vpc_id" {
-  description = "ID of the VPC to associate subnets."
+  description = "ID of the VPC."
   type        = string
 }
 
@@ -69,7 +69,7 @@ variable "availability_zone" {
 }
 
 variable "map_public_ip_on_launch" {
-  description = "Flag to map public IPs on launch for public subnets."
+  description = "Whether to map public IPs on launch for the subnet."
   type        = bool
 }
 
