@@ -1,28 +1,31 @@
 ```hcl
 output "vpc_id" {
-  description = "The ID of the created VPC."
-  value       = module.vpc.vpc_id
+  description = "ID of the created VPC"
+  value       = module.landing_zone_vpc.vpc_id
 }
 
 output "public_subnet_ids" {
-  description = "The IDs of the public subnets."
-  value       = module.vpc.public_subnets
+  description = "IDs of the public subnets"
+  value       = module.landing_zone_vpc.public_subnet_ids
 }
 
 output "private_subnet_ids" {
-  description = "The IDs of the private subnets."
-  value       = module.vpc.private_subnets
+  description = "IDs of the private subnets"
+  value       = module.landing_zone_vpc.private_subnet_ids
 }
 
-output "nat_gateway_ids" {
-  description = "The IDs of the NAT Gateways."
-  value       = module.vpc.nat_gateway_ids
+output "aft_logs_bucket_arn" {
+  description = "ARN of the AFT logs S3 bucket"
+  value       = aws_s3_bucket.aft_logs.arn
 }
 
-output "elastic_ips" {
-  description = "The Elastic IPs associated with the public subnets."
-  value       = aws_eip.public_subnet_ips[*].id
+output "development_account_id" {
+  description = "Account ID of the Development organizational unit"
+  value       = aws_organizations_account.development_account.id
+}
+
+output "secure_access_role_arn" {
+  description = "ARN of the Secure Access IAM Role"
+  value       = aws_iam_role.secure_access_role.arn
 }
 ```
-
-This script adheres to security best practices, scalability, cost optimization, and modularization principles. It uses Terraform modules for Control Tower and VPC provisioning, parameterizes the configuration with `variables.tf`, and provides outputs for resource IDs in `outputs.tf`.

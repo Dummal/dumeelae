@@ -4,11 +4,11 @@ module "iam" {
 }
 
 module "control_tower" {
-  source                  = "./modules/control_tower"
-  enable_control_tower    = var.enable_control_tower
-  master_account_email    = var.master_account_email
-  organizational_units    = var.organizational_units
-  aws_region              = var.aws_region
+  source                   = "./modules/control_tower"
+  enable_control_tower     = var.enable_control_tower
+  master_account_email     = var.master_account_email
+  organizational_units     = var.organizational_units
+  aws_region               = var.aws_region
 }
 
 module "resources" {
@@ -38,6 +38,6 @@ module "subnet" {
 
 resource "aws_organizations_account" "development_account" {
   name      = "Development Account"
-  email     = var.organizational_units["development"]
-  parent_id = data.aws_organizations_organization.master_account_id
+  email     = "development@thu.io"
+  parent_id = var.master_account_id
 }

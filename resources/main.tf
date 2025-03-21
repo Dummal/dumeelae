@@ -1,49 +1,68 @@
 ```hcl
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0"
+    }
+  }
+  required_version = ">= 1.3.0"
+}
+
 provider "aws" {
   region = var.aws_region
 }
 
-module "control_tower" {
-  source             = "terraform-aws-modules/control-tower/aws"
-  master_account_id  = var.master_account_id
-  master_account_email = var.master_account_email
-  organizational_units = var.organizational_units
-  shared_account_emails = var.shared_account_emails
-  security_account_email = var.security_account_email
-  audit_account_email = var.audit_account_email
-  aft_logs_bucket_name = var.aft_logs_bucket_name
+module "landing_zone_vpc" {
+  source              = "./modules/vpc"
+  vpc_cidr            = var.vpc_cidr
+  availability_zones  = var.availability_zones
+  public_subnet_cidrs = var.public_subnet_cidrs
+  private_subnet_cidrs = var.private_subnet_cidrs
+  create_nat_gateway  = var.create_nat_gateway
+  create_internet_gateway = var.create_internet_gateway
+  elastic_ips         = var.elastic_ips
   tags                = var.common_tags
 }
 
-module "vpc" {
-  source           = "terraform-aws-modules/vpc/aws"
-  name             = var.vpc_name
-  cidr             = var.vpc_cidr_block
-  azs              = var.availability_zones
-  public_subnets   = var.public_subnet_cidrs
-  private_subnets  = var.private_subnet_cidrs
-  enable_nat_gateway = var.enable_nat_gateway
-  single_nat_gateway = true
-  enable_dns_hostnames = true
-  enable_dns_support   = true
-  tags             = var.common_tags
+resource "aws_s3_bucket" "aft_logs" {
+  bucket = var.aft_logs_bucket_name
 
-  public_subnet_tags = {
-    "Tier" = "Public"
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
   }
 
-  private_subnet_tags = {
-    "Tier" = "Private"
-  }
-
-  create_igw        = var.create_internet_gateway
-  create_public_route_table = var.create_public_route_table
-  create_private_route_table = var.create_private_route_table
+  tags = var.common_tags
 }
 
-resource "aws_eip" "public_subnet_ips" {
-  count = var.elastic_ips_count
-  vpc   = true
-  tags  = var.common_tags
+resource "aws_organizations_organization" "org" {
+  aws_service_access_principals = ["controltower.amazonaws.com"]
+  feature_set                   = "ALL"
+}
+
+resource "aws_organizations_account" "development_account" {
+  name      = "Development"
+  email     = var.development_account_email
+  parent_id = aws_organizations_organization.org.id
+  tags      = var.common_tags
+}
+
+resource "aws_iam_role" "secure_access_role" {
+  name               = "SecureAccessRole"
+  assume_role_policy = data.aws_iam_policy_document.secure_access_policy.json
+
+  tags = var.common_tags
+}
+
+data "aws_iam_policy_document" "secure_access_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    resources = ["arn:aws:iam::${var.master_account_id}:role/ControlTowerExecution"]
+    effect = "Allow"
+  }
 }
 ```

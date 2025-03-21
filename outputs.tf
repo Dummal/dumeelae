@@ -8,17 +8,17 @@ output "control_tower_status" {
   value       = module.control_tower.status
 }
 
-output "aft_logs_bucket_arn" {
-  description = "ARN of the S3 bucket for AFT logs."
-  value       = module.resources.aft_logs_bucket_arn
+output "aft_logs_bucket_name" {
+  description = "Name of the S3 bucket for AFT logs."
+  value       = module.resources.aft_logs_bucket_name
 }
 
 output "vpc_id" {
-  description = "ID of the created VPC."
+  description = "ID of the VPC created."
   value       = module.vpc.vpc_id
 }
 
 output "subnet_ids" {
-  description = "IDs of the created subnets."
+  description = "IDs of the subnets created."
   value       = module.subnet.subnet_ids
 }

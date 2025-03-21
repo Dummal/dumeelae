@@ -2,136 +2,79 @@ provider "aws" {
   region = var.aws_region
 }
 
-resource "aws_organizations_organization" "org" {
-  feature_set = "ALL"
-}
+module "control_tower_account_factory" {
+  source = "terraform-aws-modules/control-tower/aws"
 
-resource "aws_organizations_account" "new_account" {
-  name  = var.account_name
-  email = var.account_email
-
-  tags = {
-    "Environment" = var.environment
-    "Service"     = var.service_name
-  }
+  prefix                      = var.prefix
+  environment                 = var.environment
+  allowed_regions             = var.allowed_regions
+  vpn_configuration           = var.vpn_configuration
+  siem_integration            = var.siem_integration
+  compliance_rules            = var.compliance_rules
+  patch_management_enabled    = var.patch_management_enabled
+  data_retention_years        = var.data_retention_years
+  quota_management_enabled    = var.quota_management_enabled
+  security_hub_enabled        = var.security_hub_enabled
+  license_manager_enabled     = var.license_manager_enabled
+  secrets_manager_enabled     = var.secrets_manager_enabled
+  route53_enabled             = var.route53_enabled
+  tagging_policy_enforced     = var.tagging_policy_enforced
+  lifecycle_policy_enabled    = var.lifecycle_policy_enabled
+  gdpr_compliance_required    = var.gdpr_compliance_required
+  sns_alerts_enabled          = var.sns_alerts_enabled
+  kms_encryption_enabled      = var.kms_encryption_enabled
 }
 
 resource "aws_iam_role" "control_tower_role" {
-  name               = "${var.naming_prefix}-control-tower-role"
-  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+  name               = "${var.prefix}-${var.environment}-control-tower-role"
+  assume_role_policy = data.aws_iam_policy_document.control_tower_assume_role_policy.json
 
-  tags = {
-    "Environment" = var.environment
-    "Service"     = var.service_name
-  }
+  tags = var.tags
 }
 
 resource "aws_iam_policy" "control_tower_policy" {
-  name        = "${var.naming_prefix}-control-tower-policy"
-  description = "Policy for Control Tower actions"
+  name        = "${var.prefix}-${var.environment}-control-tower-policy"
+  description = "Policy for Control Tower with least privilege access."
 
   policy = data.aws_iam_policy_document.control_tower_policy.json
+
+  tags = var.tags
 }
 
-resource "aws_config_configuration_recorder" "config_recorder" {
-  name     = "${var.naming_prefix}-config-recorder"
-  role_arn = aws_iam_role.control_tower_role.arn
-
-  recording_group {
-    all_supported = true
-    include_global_resource_types = true
-  }
-}
-
-resource "aws_config_rule" "compliance_rule" {
-  name        = "${var.naming_prefix}-compliance-rule"
-  description = "Compliance monitoring for GDPR"
-
+resource "aws_config_config_rule" "gdpr_compliance_rule" {
+  name        = "${var.prefix}-${var.environment}-gdpr-compliance-rule"
+  description = "AWS Config rule to monitor GDPR compliance."
   source {
     owner             = "AWS"
-    source_identifier = "required-tags"
+    source_identifier = "GDPRCompliance"
   }
 
-  input_parameters = jsonencode({
-    tag1Key = "Environment"
-    tag2Key = "Service"
-  })
+  tags = var.tags
 }
 
 resource "aws_secretsmanager_secret" "control_tower_secret" {
-  name = "${var.naming_prefix}-control-tower-secret"
+  name        = "${var.prefix}-${var.environment}-control-tower-secret"
+  description = "Secret for Control Tower configuration."
 
-  tags = {
-    "Environment" = var.environment
-    "Service"     = var.service_name
-  }
+  tags = var.tags
 }
 
-resource "aws_kms_key" "encryption_key" {
-  description             = "KMS key for data encryption"
-  enable_key_rotation     = true
-  deletion_window_in_days = 30
-
-  tags = {
-    "Environment" = var.environment
-    "Service"     = var.service_name
-  }
+output "control_tower_role_arn" {
+  value       = aws_iam_role.control_tower_role.arn
+  description = "ARN of the Control Tower IAM Role."
 }
 
-resource "aws_sns_topic" "alerts_topic" {
-  name = "${var.naming_prefix}-alerts-topic"
-
-  tags = {
-    "Environment" = var.environment
-    "Service"     = var.service_name
-  }
+output "control_tower_policy_arn" {
+  value       = aws_iam_policy.control_tower_policy.arn
+  description = "ARN of the Control Tower IAM Policy."
 }
 
-resource "aws_sns_topic_subscription" "alerts_subscription" {
-  topic_arn = aws_sns_topic.alerts_topic.arn
-  protocol  = "email"
-  endpoint  = var.alert_email
+output "gdpr_compliance_rule_id" {
+  value       = aws_config_config_rule.gdpr_compliance_rule.id
+  description = "ID of the GDPR compliance AWS Config Rule."
 }
 
-resource "aws_route53_zone" "dns_zone" {
-  name = var.domain_name
-
-  tags = {
-    "Environment" = var.environment
-    "Service"     = var.service_name
-  }
-}
-
-resource "aws_s3_bucket" "data_retention_bucket" {
-  bucket = "${var.naming_prefix}-data-retention"
-
-  lifecycle {
-    rule {
-      id      = "archive-data"
-      enabled = true
-
-      transition {
-        days          = var.archive_transition_days
-        storage_class = "GLACIER"
-      }
-
-      expiration {
-        days = var.retention_period_days
-      }
-    }
-  }
-
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        kms_master_key_id = aws_kms_key.encryption_key.arn
-        sse_algorithm     = "aws:kms"
-      }
-    }
-  }
-
-  tags = {
-    "Environment" = var.environment
-    "Service"     = var.service_name
-  }
+output "control_tower_secret_arn" {
+  value       = aws_secretsmanager_secret.control_tower_secret.arn
+  description = "ARN of the Control Tower Secret."
 }

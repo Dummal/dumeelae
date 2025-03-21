@@ -1,25 +1,25 @@
 variable "master_account_id" {
-  description = "The AWS account ID for the master account."
+  description = "The AWS account ID of the master account."
   type        = string
 }
 
 variable "enable_control_tower" {
-  description = "Enable or disable AWS Control Tower setup."
+  description = "Enable AWS Control Tower setup."
   type        = bool
 }
 
 variable "master_account_email" {
-  description = "Email address for the master AWS account."
+  description = "Email address of the master AWS account."
   type        = string
 }
 
 variable "organizational_units" {
-  description = "List of organizational units (OUs) to be created in the landing zone."
-  type        = map(string)
+  description = "Organizational units to be created in the landing zone."
+  type        = list(string)
 }
 
 variable "aws_region" {
-  description = "The AWS region where resources will be deployed."
+  description = "AWS region for the landing zone."
   type        = string
 }
 
@@ -49,12 +49,12 @@ variable "private_subnet_cidr" {
 }
 
 variable "aws_availability_zone" {
-  description = "Availability zone for the VPC."
+  description = "Availability Zone for the VPC."
   type        = string
 }
 
 variable "vpc_id" {
-  description = "ID of the VPC where the subnet will be created."
+  description = "ID of the VPC."
   type        = string
 }
 
@@ -64,16 +64,16 @@ variable "cidr_block" {
 }
 
 variable "availability_zone" {
-  description = "Availability zone for the subnet."
+  description = "Availability Zone for the subnet."
   type        = string
 }
 
 variable "map_public_ip_on_launch" {
-  description = "Enable or disable public IP mapping on launch."
+  description = "Whether to map public IPs on launch for instances in the subnet."
   type        = bool
 }
 
 variable "tags" {
-  description = "Tags to be applied to resources."
+  description = "Common tags to apply to resources."
   type        = map(string)
 }
