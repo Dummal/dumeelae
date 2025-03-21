@@ -1,62 +1,49 @@
 ```hcl
 provider "aws" {
-  region = var.region
+  region = var.aws_region
 }
 
-module "vpc" {
-  source              = "./modules/vpc"
-  region              = var.region
-  cidr_block          = var.vpc_cidr_block
-  availability_zones  = var.availability_zones
-  public_subnet_cidrs = var.public_subnet_cidrs
-  private_subnet_cidrs = var.private_subnet_cidrs
-  enable_nat_gateway  = var.enable_nat_gateway
-  enable_eip          = var.enable_eip
-  eip_count           = var.eip_count
+module "control_tower" {
+  source             = "terraform-aws-modules/control-tower/aws"
+  master_account_id  = var.master_account_id
+  master_account_email = var.master_account_email
+  organizational_units = var.organizational_units
+  shared_account_emails = var.shared_account_emails
+  security_account_email = var.security_account_email
+  audit_account_email = var.audit_account_email
+  aft_logs_bucket_name = var.aft_logs_bucket_name
   tags                = var.common_tags
 }
 
-resource "aws_s3_bucket" "aft_logs" {
-  bucket = var.aft_logs_bucket_name
+module "vpc" {
+  source           = "terraform-aws-modules/vpc/aws"
+  name             = var.vpc_name
+  cidr             = var.vpc_cidr_block
+  azs              = var.availability_zones
+  public_subnets   = var.public_subnet_cidrs
+  private_subnets  = var.private_subnet_cidrs
+  enable_nat_gateway = var.enable_nat_gateway
+  single_nat_gateway = true
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+  tags             = var.common_tags
 
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
-    }
+  public_subnet_tags = {
+    "Tier" = "Public"
   }
 
-  tags = var.common_tags
-}
-
-resource "aws_iam_role" "control_tower_role" {
-  name               = "ControlTowerRole"
-  assume_role_policy = data.aws_iam_policy_document.control_tower_assume_role_policy.json
-
-  tags = var.common_tags
-}
-
-data "aws_iam_policy_document" "control_tower_assume_role_policy" {
-  statement {
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "Service"
-      identifiers = ["controltower.amazonaws.com"]
-    }
+  private_subnet_tags = {
+    "Tier" = "Private"
   }
+
+  create_igw        = var.create_internet_gateway
+  create_public_route_table = var.create_public_route_table
+  create_private_route_table = var.create_private_route_table
 }
 
-output "vpc_id" {
-  value = module.vpc.vpc_id
-}
-
-output "public_subnets" {
-  value = module.vpc.public_subnets
-}
-
-output "private_subnets" {
-  value = module.vpc.private_subnets
+resource "aws_eip" "public_subnet_ips" {
+  count = var.elastic_ips_count
+  vpc   = true
+  tags  = var.common_tags
 }
 ```

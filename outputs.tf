@@ -1,16 +1,16 @@
 output "iam_role_arn" {
-  description = "The ARN of the IAM role created."
-  value       = module.iam.iam_role_arn
+  description = "ARN of the IAM role created."
+  value       = module.iam.role_arn
 }
 
 output "control_tower_status" {
   description = "Status of AWS Control Tower setup."
-  value       = module.control_tower.control_tower_status
+  value       = module.control_tower.status
 }
 
-output "aft_logs_bucket_name" {
-  description = "Name of the S3 bucket for AFT logs."
-  value       = module.resources.aft_logs_bucket_name
+output "aft_logs_bucket_arn" {
+  description = "ARN of the S3 bucket for AFT logs."
+  value       = module.resources.aft_logs_bucket_arn
 }
 
 output "vpc_id" {

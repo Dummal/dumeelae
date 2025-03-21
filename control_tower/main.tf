@@ -2,50 +2,136 @@ provider "aws" {
   region = var.aws_region
 }
 
-module "control_tower" {
-  source = "terraform-aws-modules/control-tower/aws"
+resource "aws_organizations_organization" "org" {
+  feature_set = "ALL"
+}
 
-  prefix                      = var.prefix
-  enable_custom_guardrails    = var.enable_custom_guardrails
-  allowed_regions             = var.allowed_regions
-  data_residency_region       = var.data_residency_region
-  enable_vpn                  = var.enable_vpn
-  enable_siem_integration     = var.enable_siem_integration
-  enable_rbac                 = var.enable_rbac
-  enable_config_rules         = var.enable_config_rules
-  enable_patch_management     = var.enable_patch_management
-  data_retention_duration     = var.data_retention_duration
-  enable_security_hub         = var.enable_security_hub
-  enable_license_manager      = var.enable_license_manager
-  enable_secrets_manager      = var.enable_secrets_manager
-  enable_route_53             = var.enable_route_53
-  enable_tagging_policies     = var.enable_tagging_policies
-  enable_data_lifecycle       = var.enable_data_lifecycle
-  enable_sns_alerts           = var.enable_sns_alerts
-  enable_kms_encryption       = var.enable_kms_encryption
+resource "aws_organizations_account" "new_account" {
+  name  = var.account_name
+  email = var.account_email
+
+  tags = {
+    "Environment" = var.environment
+    "Service"     = var.service_name
+  }
 }
 
 resource "aws_iam_role" "control_tower_role" {
-  name               = "${var.prefix}_control_tower_role"
-  assume_role_policy = data.aws_iam_policy_document.control_tower_assume_policy.json
+  name               = "${var.naming_prefix}-control-tower-role"
+  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 
-  tags = var.tags
+  tags = {
+    "Environment" = var.environment
+    "Service"     = var.service_name
+  }
 }
 
 resource "aws_iam_policy" "control_tower_policy" {
-  name        = "${var.prefix}_control_tower_policy"
+  name        = "${var.naming_prefix}-control-tower-policy"
   description = "Policy for Control Tower actions"
-  policy      = data.aws_iam_policy_document.control_tower_policy.json
 
-  tags = var.tags
+  policy = data.aws_iam_policy_document.control_tower_policy.json
 }
 
-resource "aws_iam_role_policy_attachment" "control_tower_policy_attachment" {
-  role       = aws_iam_role.control_tower_role.name
-  policy_arn = aws_iam_policy.control_tower_policy.arn
+resource "aws_config_configuration_recorder" "config_recorder" {
+  name     = "${var.naming_prefix}-config-recorder"
+  role_arn = aws_iam_role.control_tower_role.arn
+
+  recording_group {
+    all_supported = true
+    include_global_resource_types = true
+  }
 }
 
-output "control_tower_role_arn" {
-  value       = aws_iam_role.control_tower_role.arn
-  description = "ARN of the Control Tower IAM Role."
+resource "aws_config_rule" "compliance_rule" {
+  name        = "${var.naming_prefix}-compliance-rule"
+  description = "Compliance monitoring for GDPR"
+
+  source {
+    owner             = "AWS"
+    source_identifier = "required-tags"
+  }
+
+  input_parameters = jsonencode({
+    tag1Key = "Environment"
+    tag2Key = "Service"
+  })
+}
+
+resource "aws_secretsmanager_secret" "control_tower_secret" {
+  name = "${var.naming_prefix}-control-tower-secret"
+
+  tags = {
+    "Environment" = var.environment
+    "Service"     = var.service_name
+  }
+}
+
+resource "aws_kms_key" "encryption_key" {
+  description             = "KMS key for data encryption"
+  enable_key_rotation     = true
+  deletion_window_in_days = 30
+
+  tags = {
+    "Environment" = var.environment
+    "Service"     = var.service_name
+  }
+}
+
+resource "aws_sns_topic" "alerts_topic" {
+  name = "${var.naming_prefix}-alerts-topic"
+
+  tags = {
+    "Environment" = var.environment
+    "Service"     = var.service_name
+  }
+}
+
+resource "aws_sns_topic_subscription" "alerts_subscription" {
+  topic_arn = aws_sns_topic.alerts_topic.arn
+  protocol  = "email"
+  endpoint  = var.alert_email
+}
+
+resource "aws_route53_zone" "dns_zone" {
+  name = var.domain_name
+
+  tags = {
+    "Environment" = var.environment
+    "Service"     = var.service_name
+  }
+}
+
+resource "aws_s3_bucket" "data_retention_bucket" {
+  bucket = "${var.naming_prefix}-data-retention"
+
+  lifecycle {
+    rule {
+      id      = "archive-data"
+      enabled = true
+
+      transition {
+        days          = var.archive_transition_days
+        storage_class = "GLACIER"
+      }
+
+      expiration {
+        days = var.retention_period_days
+      }
+    }
+  }
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        kms_master_key_id = aws_kms_key.encryption_key.arn
+        sse_algorithm     = "aws:kms"
+      }
+    }
+  }
+
+  tags = {
+    "Environment" = var.environment
+    "Service"     = var.service_name
+  }
 }

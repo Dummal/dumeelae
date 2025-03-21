@@ -1,56 +1,54 @@
 variable "vpc_id" {
-  description = "ID of the VPC where subnets will be created"
+  description = "The ID of the VPC where subnets will be created."
   type        = string
 }
 
-variable "cidr_block" {
-  description = "Base CIDR block for subnet allocation"
-  type        = string
+variable "subnet_configs" {
+  description = "Configuration for subnets including CIDR blocks, types, and availability zones."
+  type = list(object({
+    cidr_block        = string
+    type              = string
+    availability_zone = string
+  }))
 }
 
-variable "ipv6_enabled" {
-  description = "Enable IPv6 for subnets"
+variable "create_public_subnets" {
+  description = "Whether to create public subnets."
   type        = bool
   default     = false
 }
 
-variable "ipv6_cidr_block" {
-  description = "IPv6 CIDR block for subnets"
-  type        = string
-  default     = null
+variable "create_private_subnets" {
+  description = "Whether to create private subnets."
+  type        = bool
+  default     = false
 }
 
-variable "type" {
-  description = "Type of subnets: public or private"
+variable "internet_gateway_id" {
+  description = "The ID of the Internet Gateway for public subnets."
   type        = string
 }
 
-variable "azs" {
-  description = "List of availability zones for subnets"
-  type        = list(string)
-}
-
-variable "network_acl_id" {
-  description = "Network ACL ID to associate with subnets"
+variable "nat_gateway_id" {
+  description = "The ID of the NAT Gateway for private subnets."
   type        = string
-  default     = null
 }
 
 variable "common_tags" {
-  description = "Common tags to apply to all resources"
+  description = "Common tags to apply to all resources."
   type        = map(string)
   default     = {}
 }
 
-variable "network_acl_rules" {
-  description = "List of network ACL rules"
-  type        = list(object({
+variable "acl_rules" {
+  description = "Rules for the Network ACL."
+  type = list(object({
     rule_number = number
     protocol    = string
-    rule_action = string
+    action      = string
     cidr_block  = string
     from_port   = number
     to_port     = number
+    egress      = bool
   }))
-  default = []
 }

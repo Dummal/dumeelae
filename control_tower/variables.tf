@@ -1,122 +1,53 @@
 variable "aws_region" {
-  description = "AWS region to deploy resources."
+  description = "AWS region where resources will be created"
   type        = string
-  default     = "eu-west-1"
+  default     = "eu-central-1"
 }
 
-variable "prefix" {
-  description = "Naming prefix for resources."
+variable "account_name" {
+  description = "Name for the AWS account to be created"
+  type        = string
+}
+
+variable "account_email" {
+  description = "Email for the AWS account to be created"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment for the resources (e.g., dev, prod)"
+  type        = string
+}
+
+variable "service_name" {
+  description = "Name of the service being deployed"
+  type        = string
+}
+
+variable "naming_prefix" {
+  description = "Prefix for naming resources"
   type        = string
   default     = "ti-"
 }
 
-variable "enable_custom_guardrails" {
-  description = "Enable custom guardrails for Control Tower."
-  type        = bool
-  default     = true
-}
-
-variable "allowed_regions" {
-  description = "Regions where resources can be created."
-  type        = list(string)
-  default     = ["eu-west-1", "eu-central-1"]
-}
-
-variable "data_residency_region" {
-  description = "Region for data residency compliance."
+variable "domain_name" {
+  description = "Domain name for DNS management"
   type        = string
-  default     = "eu-west-1"
 }
 
-variable "enable_vpn" {
-  description = "Enable VPN connectivity for secure on-premises integration."
-  type        = bool
-  default     = true
+variable "alert_email" {
+  description = "Email address for SNS alerts"
+  type        = string
 }
 
-variable "enable_siem_integration" {
-  description = "Enable integration with SIEM system."
-  type        = bool
-  default     = true
-}
-
-variable "enable_rbac" {
-  description = "Enable role-based access control."
-  type        = bool
-  default     = true
-}
-
-variable "enable_config_rules" {
-  description = "Enable AWS Config rules for compliance monitoring."
-  type        = bool
-  default     = true
-}
-
-variable "enable_patch_management" {
-  description = "Enable AWS Systems Manager Patch Manager for patching."
-  type        = bool
-  default     = true
-}
-
-variable "data_retention_duration" {
-  description = "Data retention duration in years."
+variable "archive_transition_days" {
+  description = "Number of days before transitioning data to Glacier"
   type        = number
-  default     = 7
+  default     = 30
 }
 
-variable "enable_security_hub" {
-  description = "Enable AWS Security Hub for compliance enforcement."
-  type        = bool
-  default     = true
-}
-
-variable "enable_license_manager" {
-  description = "Enable AWS License Manager for software license management."
-  type        = bool
-  default     = true
-}
-
-variable "enable_secrets_manager" {
-  description = "Enable AWS Secrets Manager for secret management."
-  type        = bool
-  default     = true
-}
-
-variable "enable_route_53" {
-  description = "Enable Amazon Route 53 for DNS management."
-  type        = bool
-  default     = true
-}
-
-variable "enable_tagging_policies" {
-  description = "Enable mandatory tagging policies."
-  type        = bool
-  default     = true
-}
-
-variable "enable_data_lifecycle" {
-  description = "Enable lifecycle policies for data archiving."
-  type        = bool
-  default     = true
-}
-
-variable "enable_sns_alerts" {
-  description = "Enable AWS SNS for alerting."
-  type        = bool
-  default     = true
-}
-
-variable "enable_kms_encryption" {
-  description = "Enable AWS KMS for data encryption."
-  type        = bool
-  default     = true
-}
-
-variable "tags" {
-  description = "Tags to apply to resources."
-  type        = map(string)
-  default     = {
-    Environment = "production"
-    ManagedBy   = "Terraform"
-  }
+variable "retention_period_days" {
+  description = "Number of days for data retention before deletion"
+  type        = number
+  default     = 2555
 }
