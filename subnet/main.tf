@@ -1,87 +1,108 @@
+module "subnets" {
+  source = "./modules/subnets"
+
+  vpc_id              = var.vpc_id
+  cidr_block          = var.cidr_block
+  ipv6_enabled        = var.ipv6_enabled
+  ipv6_cidr_block     = var.ipv6_cidr_block
+  availability_zones  = var.availability_zones
+  type                = var.type
+  nat_gateway_enabled = var.nat_gateway_enabled
+  network_acl_id      = var.network_acl_id
+  common_tags         = var.common_tags
+}
+
 resource "aws_subnet" "subnets" {
-  count             = length(var.subnet_configs)
+  count = length(var.availability_zones)
+
   vpc_id            = var.vpc_id
-  cidr_block        = var.subnet_configs[count.index].cidr_block
-  availability_zone = var.subnet_configs[count.index].availability_zone
-  map_public_ip_on_launch = var.subnet_configs[count.index].type == "public" ? true : false
+  cidr_block        = cidrsubnet(var.cidr_block, 8, count.index)
+  availability_zone = var.availability_zones[count.index]
+  map_public_ip_on_launch = var.type == "public" ? true : false
 
-  tags = merge(
-    {
-      Name = "${var.subnet_configs[count.index].type}-subnet-${count.index}"
-    },
-    var.common_tags
-  )
+  tags = merge(var.common_tags, {
+    Name = "${var.type}-subnet-${count.index}"
+  })
 }
 
-resource "aws_route_table" "public_rt" {
-  count = var.create_public_subnets ? 1 : 0
+resource "aws_route_table" "route_table" {
+  count = var.type == "public" ? 1 : length(var.availability_zones)
+
   vpc_id = var.vpc_id
 
-  tags = merge(
-    {
-      Name = "public-route-table"
-    },
-    var.common_tags
-  )
+  tags = merge(var.common_tags, {
+    Name = "${var.type}-route-table-${count.index}"
+  })
 }
 
-resource "aws_route_table" "private_rt" {
-  count = var.create_private_subnets ? 1 : 0
+resource "aws_route" "route" {
+  count = var.type == "public" ? 1 : length(var.availability_zones)
+
+  route_table_id = aws_route_table.route_table[count.index]
+
+  destination_cidr_block = var.type == "public" ? "0.0.0.0/0" : "0.0.0.0/0"
+  gateway_id = var.type == "public" ? aws_internet_gateway.igw.id : aws_nat_gateway.natgw.id
+}
+
+resource "aws_internet_gateway" "igw" {
+  count = var.type == "public" ? 1 : 0
+
   vpc_id = var.vpc_id
 
-  tags = merge(
-    {
-      Name = "private-route-table"
-    },
-    var.common_tags
-  )
+  tags = merge(var.common_tags, {
+    Name = "Internet-Gateway"
+  })
 }
 
-resource "aws_route" "public_route" {
-  count                  = var.create_public_subnets ? 1 : 0
-  route_table_id         = aws_route_table.public_rt[0].id
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = var.internet_gateway_id
+resource "aws_nat_gateway" "natgw" {
+  count = var.type == "private" && var.nat_gateway_enabled ? length(var.availability_zones) : 0
+
+  allocation_id = aws_eip.nat_eip[count.index].id
+  subnet_id     = aws_subnet.subnets[count.index].id
+
+  tags = merge(var.common_tags, {
+    Name = "NAT-Gateway-${count.index}"
+  })
 }
 
-resource "aws_route" "private_route" {
-  count                  = var.create_private_subnets ? 1 : 0
-  route_table_id         = aws_route_table.private_rt[0].id
-  destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = var.nat_gateway_id
+resource "aws_eip" "nat_eip" {
+  count = var.type == "private" && var.nat_gateway_enabled ? length(var.availability_zones) : 0
+
+  tags = merge(var.common_tags, {
+    Name = "NAT-EIP-${count.index}"
+  })
 }
 
-resource "aws_route_table_association" "public_associations" {
-  count          = var.create_public_subnets ? length(var.subnet_configs) : 0
-  subnet_id      = aws_subnet.subnets[count.index].id
-  route_table_id = aws_route_table.public_rt[0].id
-}
+resource "aws_network_acl" "network_acl" {
+  count = var.network_acl_id != null ? 0 : 1
 
-resource "aws_route_table_association" "private_associations" {
-  count          = var.create_private_subnets ? length(var.subnet_configs) : 0
-  subnet_id      = aws_subnet.subnets[count.index].id
-  route_table_id = aws_route_table.private_rt[0].id
-}
-
-resource "aws_network_acl" "acl" {
   vpc_id = var.vpc_id
 
-  tags = merge(
-    {
-      Name = "network-acl"
-    },
-    var.common_tags
-  )
+  tags = merge(var.common_tags, {
+    Name = "Network-ACL"
+  })
 }
 
-resource "aws_network_acl_rule" "acl_rules" {
-  count = length(var.acl_rules)
-  network_acl_id = aws_network_acl.acl.id
-  rule_number    = var.acl_rules[count.index].rule_number
-  protocol       = var.acl_rules[count.index].protocol
-  rule_action    = var.acl_rules[count.index].action
-  cidr_block     = var.acl_rules[count.index].cidr_block
-  from_port      = var.acl_rules[count.index].from_port
-  to_port        = var.acl_rules[count.index].to_port
-  egress         = var.acl_rules[count.index].egress
+resource "aws_network_acl_rule" "network_acl_rule" {
+  count = var.network_acl_id != null ? 0 : 2
+
+  network_acl_id = aws_network_acl.network_acl.id
+  rule_number    = count.index + 1
+  protocol       = "-1"
+  action         = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 0
+  to_port        = 0
+}
+
+output "subnet_ids" {
+  value = aws_subnet.subnets[*].id
+}
+
+output "route_table_ids" {
+  value = aws_route_table.route_table[*].id
+}
+
+output "nat_gateway_ids" {
+  value = aws_nat_gateway.natgw[*].id
 }

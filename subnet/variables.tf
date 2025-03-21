@@ -3,52 +3,46 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "subnet_configs" {
-  description = "Configuration for subnets including CIDR blocks, types, and availability zones."
-  type = list(object({
-    cidr_block        = string
-    type              = string
-    availability_zone = string
-  }))
+variable "cidr_block" {
+  description = "The base CIDR block for subnet allocation."
+  type        = string
 }
 
-variable "create_public_subnets" {
-  description = "Whether to create public subnets."
+variable "ipv6_enabled" {
+  description = "Enable IPv6 for subnets."
   type        = bool
   default     = false
 }
 
-variable "create_private_subnets" {
-  description = "Whether to create private subnets."
+variable "ipv6_cidr_block" {
+  description = "The IPv6 CIDR block for subnet allocation."
+  type        = string
+  default     = null
+}
+
+variable "availability_zones" {
+  description = "List of availability zones for subnet creation."
+  type        = list(string)
+}
+
+variable "type" {
+  description = "Type of subnets to create (public or private)."
+  type        = string
+}
+
+variable "nat_gateway_enabled" {
+  description = "Enable NAT Gateway for private subnets."
   type        = bool
   default     = false
 }
 
-variable "internet_gateway_id" {
-  description = "The ID of the Internet Gateway for public subnets."
+variable "network_acl_id" {
+  description = "Optional Network ACL ID to associate with subnets."
   type        = string
-}
-
-variable "nat_gateway_id" {
-  description = "The ID of the NAT Gateway for private subnets."
-  type        = string
+  default     = null
 }
 
 variable "common_tags" {
   description = "Common tags to apply to all resources."
   type        = map(string)
-  default     = {}
-}
-
-variable "acl_rules" {
-  description = "Rules for the Network ACL."
-  type = list(object({
-    rule_number = number
-    protocol    = string
-    action      = string
-    cidr_block  = string
-    from_port   = number
-    to_port     = number
-    egress      = bool
-  }))
 }

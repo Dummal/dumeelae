@@ -3,17 +3,17 @@ output "subnet_ids" {
   value       = aws_subnet.subnets[*].id
 }
 
-output "public_route_table_id" {
-  description = "ID of the public route table."
-  value       = aws_route_table.public_rt[0].id
+output "route_table_ids" {
+  description = "IDs of the created route tables."
+  value       = aws_route_table.route_table[*].id
 }
 
-output "private_route_table_id" {
-  description = "ID of the private route table."
-  value       = aws_route_table.private_rt[0].id
+output "nat_gateway_ids" {
+  description = "IDs of the created NAT Gateways."
+  value       = aws_nat_gateway.natgw[*].id
 }
 
-output "network_acl_id" {
-  description = "ID of the created Network ACL."
-  value       = aws_network_acl.acl.id
+output "internet_gateway_id" {
+  description = "ID of the created Internet Gateway."
+  value       = aws_internet_gateway.igw[*].id
 }
