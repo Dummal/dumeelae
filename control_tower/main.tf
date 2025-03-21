@@ -2,102 +2,50 @@ provider "aws" {
   region = var.aws_region
 }
 
-resource "aws_organizations_account" "new_account" {
-  name            = var.account_name
-  email           = var.account_email
-  role_name       = var.account_role_name
-  iam_user_access_to_billing = "DENY"
-  tags = var.tags
+module "control_tower" {
+  source = "terraform-aws-modules/control-tower/aws"
+
+  prefix                      = var.prefix
+  enable_custom_guardrails    = var.enable_custom_guardrails
+  allowed_regions             = var.allowed_regions
+  data_residency_region       = var.data_residency_region
+  enable_vpn                  = var.enable_vpn
+  enable_siem_integration     = var.enable_siem_integration
+  enable_rbac                 = var.enable_rbac
+  enable_config_rules         = var.enable_config_rules
+  enable_patch_management     = var.enable_patch_management
+  data_retention_duration     = var.data_retention_duration
+  enable_security_hub         = var.enable_security_hub
+  enable_license_manager      = var.enable_license_manager
+  enable_secrets_manager      = var.enable_secrets_manager
+  enable_route_53             = var.enable_route_53
+  enable_tagging_policies     = var.enable_tagging_policies
+  enable_data_lifecycle       = var.enable_data_lifecycle
+  enable_sns_alerts           = var.enable_sns_alerts
+  enable_kms_encryption       = var.enable_kms_encryption
 }
 
 resource "aws_iam_role" "control_tower_role" {
-  name               = var.iam_role_name
-  assume_role_policy = data.aws_iam_policy_document.control_tower_assume_role_policy.json
-  tags               = var.tags
+  name               = "${var.prefix}_control_tower_role"
+  assume_role_policy = data.aws_iam_policy_document.control_tower_assume_policy.json
+
+  tags = var.tags
 }
 
 resource "aws_iam_policy" "control_tower_policy" {
-  name        = var.policy_name
-  description = "Policy for Control Tower operations"
+  name        = "${var.prefix}_control_tower_policy"
+  description = "Policy for Control Tower actions"
   policy      = data.aws_iam_policy_document.control_tower_policy.json
-  tags        = var.tags
-}
 
-resource "aws_secretsmanager_secret" "control_tower_secret" {
-  name              = var.secrets_name
-  description       = "Secrets for Control Tower operations"
-  kms_key_id        = aws_kms_key.control_tower_kms_key.id
-  tags              = var.tags
-}
-
-resource "aws_kms_key" "control_tower_kms_key" {
-  description             = "KMS key for data encryption in Control Tower"
-  deletion_window_in_days = 30
-  enable_key_rotation     = true
-  tags                    = var.tags
-}
-
-resource "aws_config_config_rule" "gdpr_compliance_rule" {
-  name        = "gdpr-compliance-rule"
-  description = "Ensure GDPR compliance"
-  scope {
-    compliance_resource_types = ["AWS::AllSupported"]
-  }
-  source {
-    owner             = "AWS"
-    source_identifier = "GDPRComplianceCheck"
-  }
   tags = var.tags
 }
 
-resource "aws_sns_topic" "alerts_topic" {
-  name = var.sns_topic_name
-  tags = var.tags
+resource "aws_iam_role_policy_attachment" "control_tower_policy_attachment" {
+  role       = aws_iam_role.control_tower_role.name
+  policy_arn = aws_iam_policy.control_tower_policy.arn
 }
 
-resource "aws_sns_topic_subscription" "alerts_subscription" {
-  topic_arn = aws_sns_topic.alerts_topic.arn
-  protocol  = "email"
-  endpoint  = var.sns_alert_email
-}
-
-resource "aws_route53_zone" "dns_management_zone" {
-  name = var.dns_domain_name
-  tags = var.tags
-}
-
-resource "aws_s3_bucket" "data_retention_bucket" {
-  bucket = var.retention_bucket_name
-  lifecycle_rule {
-    id      = "data-retention-policy"
-    enabled = true
-    transition {
-      days          = var.retention_transition_days
-      storage_class = "GLACIER"
-    }
-    expiration {
-      days = var.retention_expiration_days
-    }
-  }
-  tags = var.tags
-}
-
-output "account_id" {
-  value = aws_organizations_account.new_account.id
-}
-
-output "kms_key_arn" {
-  value = aws_kms_key.control_tower_kms_key.arn
-}
-
-output "sns_topic_arn" {
-  value = aws_sns_topic.alerts_topic.arn
-}
-
-output "route53_zone_id" {
-  value = aws_route53_zone.dns_management_zone.zone_id
-}
-
-output "s3_bucket_name" {
-  value = aws_s3_bucket.data_retention_bucket.bucket
+output "control_tower_role_arn" {
+  value       = aws_iam_role.control_tower_role.arn
+  description = "ARN of the Control Tower IAM Role."
 }

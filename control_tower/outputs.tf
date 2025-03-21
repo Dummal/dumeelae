@@ -1,24 +1,29 @@
-output "account_id" {
-  description = "ID of the newly created AWS account"
-  value       = aws_organizations_account.new_account.id
+output "control_tower_policy_arn" {
+  value       = aws_iam_policy.control_tower_policy.arn
+  description = "ARN of the Control Tower IAM Policy."
 }
 
-output "kms_key_arn" {
-  description = "ARN of the KMS key used for encryption"
-  value       = aws_kms_key.control_tower_kms_key.arn
+output "control_tower_role_arn" {
+  value       = aws_iam_role.control_tower_role.arn
+  description = "ARN of the Control Tower IAM Role."
 }
 
-output "sns_topic_arn" {
-  description = "ARN of the SNS topic for alerts"
-  value       = aws_sns_topic.alerts_topic.arn
+output "allowed_regions" {
+  value       = var.allowed_regions
+  description = "Regions where resources are allowed to be created."
 }
 
-output "route53_zone_id" {
-  description = "ID of the Route 53 hosted zone"
-  value       = aws_route53_zone.dns_management_zone.zone_id
+output "data_residency_region" {
+  value       = var.data_residency_region
+  description = "Region for data residency compliance."
 }
 
-output "s3_bucket_name" {
-  description = "Name of the S3 bucket for data retention"
-  value       = aws_s3_bucket.data_retention_bucket.bucket
+output "vpn_enabled" {
+  value       = var.enable_vpn
+  description = "Indicates if VPN connectivity is enabled."
+}
+
+output "siem_integration_enabled" {
+  value       = var.enable_siem_integration
+  description = "Indicates if SIEM integration is enabled."
 }

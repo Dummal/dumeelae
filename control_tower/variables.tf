@@ -1,80 +1,122 @@
 variable "aws_region" {
-  description = "AWS region for resource deployment"
+  description = "AWS region to deploy resources."
   type        = string
   default     = "eu-west-1"
 }
 
-variable "account_name" {
-  description = "Name of the new AWS account"
+variable "prefix" {
+  description = "Naming prefix for resources."
   type        = string
+  default     = "ti-"
 }
 
-variable "account_email" {
-  description = "Email for the new AWS account"
-  type        = string
+variable "enable_custom_guardrails" {
+  description = "Enable custom guardrails for Control Tower."
+  type        = bool
+  default     = true
 }
 
-variable "account_role_name" {
-  description = "IAM role name for the new AWS account"
-  type        = string
+variable "allowed_regions" {
+  description = "Regions where resources can be created."
+  type        = list(string)
+  default     = ["eu-west-1", "eu-central-1"]
 }
 
-variable "iam_role_name" {
-  description = "Name of the IAM role for Control Tower operations"
+variable "data_residency_region" {
+  description = "Region for data residency compliance."
   type        = string
-  default     = "ti-control-tower-role"
+  default     = "eu-west-1"
 }
 
-variable "policy_name" {
-  description = "Name of the IAM policy for Control Tower operations"
-  type        = string
-  default     = "ti-control-tower-policy"
+variable "enable_vpn" {
+  description = "Enable VPN connectivity for secure on-premises integration."
+  type        = bool
+  default     = true
 }
 
-variable "secrets_name" {
-  description = "Name of the Secrets Manager secret"
-  type        = string
-  default     = "ti-control-tower-secret"
+variable "enable_siem_integration" {
+  description = "Enable integration with SIEM system."
+  type        = bool
+  default     = true
 }
 
-variable "sns_topic_name" {
-  description = "Name of the SNS topic for alerts"
-  type        = string
-  default     = "ti-alerts-topic"
+variable "enable_rbac" {
+  description = "Enable role-based access control."
+  type        = bool
+  default     = true
 }
 
-variable "sns_alert_email" {
-  description = "Email address for SNS alerts"
-  type        = string
+variable "enable_config_rules" {
+  description = "Enable AWS Config rules for compliance monitoring."
+  type        = bool
+  default     = true
 }
 
-variable "dns_domain_name" {
-  description = "Domain name for Route 53 DNS management"
-  type        = string
+variable "enable_patch_management" {
+  description = "Enable AWS Systems Manager Patch Manager for patching."
+  type        = bool
+  default     = true
 }
 
-variable "retention_bucket_name" {
-  description = "Name of the S3 bucket for data retention"
-  type        = string
-}
-
-variable "retention_transition_days" {
-  description = "Number of days before transitioning to Glacier storage"
+variable "data_retention_duration" {
+  description = "Data retention duration in years."
   type        = number
-  default     = 2555
+  default     = 7
 }
 
-variable "retention_expiration_days" {
-  description = "Number of days before data expiration"
-  type        = number
-  default     = 2555
+variable "enable_security_hub" {
+  description = "Enable AWS Security Hub for compliance enforcement."
+  type        = bool
+  default     = true
+}
+
+variable "enable_license_manager" {
+  description = "Enable AWS License Manager for software license management."
+  type        = bool
+  default     = true
+}
+
+variable "enable_secrets_manager" {
+  description = "Enable AWS Secrets Manager for secret management."
+  type        = bool
+  default     = true
+}
+
+variable "enable_route_53" {
+  description = "Enable Amazon Route 53 for DNS management."
+  type        = bool
+  default     = true
+}
+
+variable "enable_tagging_policies" {
+  description = "Enable mandatory tagging policies."
+  type        = bool
+  default     = true
+}
+
+variable "enable_data_lifecycle" {
+  description = "Enable lifecycle policies for data archiving."
+  type        = bool
+  default     = true
+}
+
+variable "enable_sns_alerts" {
+  description = "Enable AWS SNS for alerting."
+  type        = bool
+  default     = true
+}
+
+variable "enable_kms_encryption" {
+  description = "Enable AWS KMS for data encryption."
+  type        = bool
+  default     = true
 }
 
 variable "tags" {
-  description = "Tags to apply to resources"
+  description = "Tags to apply to resources."
   type        = map(string)
   default     = {
-    Environment = "Production"
+    Environment = "production"
     ManagedBy   = "Terraform"
   }
 }

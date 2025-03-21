@@ -1,21 +1,21 @@
 ```hcl
 output "vpc_id" {
-  description = "ID of the created VPC"
+  description = "The ID of the created VPC"
   value       = module.vpc.vpc_id
 }
 
-output "public_subnet_ids" {
-  description = "IDs of the public subnets"
-  value       = module.vpc.public_subnet_ids
+output "public_subnets" {
+  description = "List of public subnet IDs"
+  value       = module.vpc.public_subnets
 }
 
-output "private_subnet_ids" {
-  description = "IDs of the private subnets"
-  value       = module.vpc.private_subnet_ids
+output "private_subnets" {
+  description = "List of private subnet IDs"
+  value       = module.vpc.private_subnets
 }
 
-output "control_tower_status" {
-  description = "Status of AWS Control Tower provisioning"
-  value       = module.control_tower.status
+output "aft_logs_bucket_arn" {
+  description = "ARN of the S3 bucket for AFT logs"
+  value       = aws_s3_bucket.aft_logs.arn
 }
 ```

@@ -1,17 +1,11 @@
 ```hcl
-variable "region" {
-  description = "AWS region for the Landing Zone"
-  type        = string
-  default     = "us-east-2"
-}
-
-variable "vpc_cidr_block" {
+variable "cidr_block" {
   description = "CIDR block for the VPC"
   type        = string
 }
 
 variable "availability_zones" {
-  description = "List of availability zones to use"
+  description = "List of availability zones"
   type        = list(string)
 }
 
@@ -37,19 +31,8 @@ variable "enable_eip" {
   default     = true
 }
 
-variable "eip_count" {
-  description = "Number of Elastic IPs to allocate"
-  type        = number
-  default     = 2
-}
-
-variable "aft_logs_bucket_name" {
-  description = "Name of the S3 bucket for AFT logs"
-  type        = string
-}
-
-variable "common_tags" {
-  description = "Common tags to apply to all resources"
+variable "tags" {
+  description = "Tags to apply to all resources"
   type        = map(string)
 }
 ```

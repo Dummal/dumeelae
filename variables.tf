@@ -1,5 +1,5 @@
 variable "master_account_id" {
-  description = "The AWS account ID for the master account."
+  description = "The ID of the master AWS account."
   type        = string
 }
 
@@ -9,17 +9,17 @@ variable "enable_control_tower" {
 }
 
 variable "master_account_email" {
-  description = "Email address associated with the master AWS account."
+  description = "Email address of the master AWS account."
   type        = string
 }
 
 variable "organizational_units" {
-  description = "Organizational Units required in the landing zone."
-  type        = map(string)
+  description = "List of organizational units (OUs) for the landing zone."
+  type        = list(string)
 }
 
 variable "aws_region" {
-  description = "AWS region where the infrastructure will be provisioned."
+  description = "AWS region for the landing zone."
   type        = string
 }
 
@@ -49,7 +49,7 @@ variable "private_subnet_cidr" {
 }
 
 variable "aws_availability_zone" {
-  description = "AWS availability zone to use."
+  description = "AWS availability zone for the VPC."
   type        = string
 }
 
@@ -69,16 +69,11 @@ variable "availability_zone" {
 }
 
 variable "map_public_ip_on_launch" {
-  description = "Whether to map public IPs on launch for the subnet."
+  description = "Whether to map public IPs on launch."
   type        = bool
 }
 
 variable "tags" {
   description = "Tags to apply to resources."
   type        = map(string)
-}
-
-variable "development_account_email" {
-  description = "Email address for the development account."
-  type        = string
 }

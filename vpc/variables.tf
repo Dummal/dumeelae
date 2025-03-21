@@ -1,39 +1,47 @@
 variable "region" {
-  description = "AWS region for deployment"
+  description = "The AWS region to deploy resources in."
+  type        = string
   default     = "us-east-2"
 }
 
 variable "vpc_cidr" {
-  description = "CIDR block for the VPC"
+  description = "The CIDR block for the VPC."
+  type        = string
 }
 
 variable "public_subnets" {
-  description = "List of CIDR blocks for public subnets"
+  description = "A list of CIDR blocks for public subnets."
   type        = list(string)
 }
 
 variable "private_subnets" {
-  description = "List of CIDR blocks for private subnets"
+  description = "A list of CIDR blocks for private subnets."
   type        = list(string)
 }
 
 variable "availability_zones" {
-  description = "List of availability zones for subnets"
+  description = "A list of availability zones for subnets."
   type        = list(string)
 }
 
 variable "enable_nat_gateway" {
-  description = "Enable NAT Gateway for private subnets"
+  description = "Whether to enable a NAT Gateway for private subnets."
   type        = bool
   default     = true
 }
 
 variable "tags" {
-  description = "Tags to apply to resources"
+  description = "A map of tags to apply to all resources."
   type        = map(string)
+  default     = {}
 }
 
-variable "instance_tenancy" {
-  description = "Instance tenancy option for VPC"
-  default     = "default"
+variable "environment" {
+  description = "The environment name (e.g., development, production)."
+  type        = string
+}
+
+variable "aft_logs_bucket_name" {
+  description = "The name of the S3 bucket for AFT logs."
+  type        = string
 }
