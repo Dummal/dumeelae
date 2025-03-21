@@ -1,53 +1,79 @@
-```hcl
-// variables.tf
-
-// Variable for the name of the organization
-variable "organization_name" {
-  description = "The name of the AWS organization to be created or managed."
+variable "master_account_id" {
+  description = "The ID of the master AWS account."
   type        = string
 }
 
-// Variable for the parent ID where the organization unit will be created
-variable "parent_id" {
-  description = "The ID of the parent organizational unit or root under which the new organizational unit will be created."
+variable "enable_control_tower" {
+  description = "Boolean to enable AWS Control Tower setup."
+  type        = bool
+}
+
+variable "master_account_email" {
+  description = "Email address of the master AWS account."
   type        = string
 }
 
-// Variable for the list of user email addresses
-variable "users_email" {
-  description = "A list of email addresses for the users to be added to the organization."
-  type        = list(string)
-}
-
-// Variable for the AWS region
-variable "aws_region" {
-  description = "The AWS region where resources will be deployed."
-  type        = string
-  default     = "us-east-1"
-}
-
-// Variable for the IAM role name
-variable "iam_role_name" {
-  description = "The name of the IAM role to be created or managed."
-  type        = string
-}
-
-// Variable for the policy ARN to attach to the IAM role
-variable "policy_arn" {
-  description = "The ARN of the policy to attach to the IAM role."
-  type        = string
-}
-
-// Variable for the account alias
-variable "account_alias" {
-  description = "The alias to assign to the AWS account."
-  type        = string
-}
-
-// Variable for the tags to apply to resources
-variable "tags" {
-  description = "A map of tags to apply to the resources."
+variable "organizational_units" {
+  description = "List of organizational units to be created."
   type        = map(string)
-  default     = {}
 }
-```
+
+variable "aws_region" {
+  description = "AWS region where resources will be provisioned."
+  type        = string
+}
+
+variable "aft_logs_bucket_name" {
+  description = "Name of the S3 bucket for AFT logs."
+  type        = string
+}
+
+variable "public_vpc_cidr" {
+  description = "CIDR block for the public VPC."
+  type        = string
+}
+
+variable "public_subnet_cidr" {
+  description = "CIDR block for the public subnet."
+  type        = string
+}
+
+variable "private_vpc_cidr" {
+  description = "CIDR block for the private VPC."
+  type        = string
+}
+
+variable "private_subnet_cidr" {
+  description = "CIDR block for the private subnet."
+  type        = string
+}
+
+variable "aws_availability_zone" {
+  description = "AWS availability zone for resources."
+  type        = string
+}
+
+variable "vpc_id" {
+  description = "ID of the VPC."
+  type        = string
+}
+
+variable "cidr_block" {
+  description = "CIDR block for the subnet."
+  type        = string
+}
+
+variable "availability_zone" {
+  description = "Availability zone for the subnet."
+  type        = string
+}
+
+variable "map_public_ip_on_launch" {
+  description = "Boolean to map public IPs on resource launch."
+  type        = bool
+}
+
+variable "tags" {
+  description = "Tags to be applied to the resources."
+  type        = map(string)
+}

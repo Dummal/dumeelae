@@ -1,21 +1,24 @@
-```hcl
-output "dev_ou_id" {
-  value       = aws_organizations_organizational_unit.dev.id
-  description = "The ID of the Development Organizational Unit (OU) in AWS Organizations."
+output "iam_role_arn" {
+  description = "ARN of the IAM role created by the IAM module."
+  value       = module.iam.role_arn
 }
 
-output "prod_ou_id" {
-  value       = aws_organizations_organizational_unit.prod.id
-  description = "The ID of the Production Organizational Unit (OU) in AWS Organizations."
+output "control_tower_status" {
+  description = "Status of the AWS Control Tower setup."
+  value       = module.control_tower.status
 }
 
-output "security_ou_id" {
-  value       = aws_organizations_organizational_unit.security.id
-  description = "The ID of the Security Organizational Unit (OU) in AWS Organizations."
+output "aft_logs_bucket_arn" {
+  description = "ARN of the S3 bucket for AFT logs."
+  value       = module.resources.aft_logs_bucket_arn
 }
 
-output "audit_ou_id" {
-  value       = aws_organizations_organizational_unit.audit.id
-  description = "The ID of the Audit Organizational Unit (OU) in AWS Organizations."
+output "vpc_id" {
+  description = "ID of the VPC created."
+  value       = module.vpc.vpc_id
 }
-```
+
+output "subnet_ids" {
+  description = "List of subnet IDs created."
+  value       = module.subnet.subnet_ids
+}

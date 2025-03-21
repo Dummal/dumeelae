@@ -1,11 +1,16 @@
-aws_region = "us-west-2"
-enable_control_tower = true
-master_account_email = "master@example.com"
-master_account_id = "123456789012"
-organizational_units = ["Security", "Audit Log", "Sandbox"]
-dev_account_email = "dev@example.com"
-prod_account_email = "prod@example.com"
-shared_account_email = "shared@example.com"
-security_account_email = "security@example.com"
-audit_account_email = "audit@example.com"
-aft_logs_bucket_name = "aft-logs-bucket-863518414447"
+master_account_id       = "123456789631"
+enable_control_tower    = true
+master_account_email    = "ghyut@fggg.io"
+organizational_units    = { development = "ou-xxxx-yyyy" }
+aws_region              = "us-east-2"
+aft_logs_bucket_name    = "development"
+public_vpc_cidr         = "10.0.0.0/16"
+public_subnet_cidr      = "10.0.1.0/24"
+private_vpc_cidr        = "10.0.2.0/16"
+private_subnet_cidr     = "10.0.3.0/24"
+aws_availability_zone   = "us-east-2a"
+vpc_id                  = "vpc-xxxx"
+cidr_block              = "10.0.4.0/24"
+availability_zone       = "us-east-2a"
+map_public_ip_on_launch = true
+tags                    = { Environment = "Development", Project = "LandingZone" }
